@@ -75,7 +75,7 @@ void menuOpts(int menuOpt) {
     clockShow = true;
     menuShow = false;
     lastPage = 1;
-    if (oled2Page = 1 && oled2Priority == true) displayBlank(2);
+    if (oled2Page == 1 && oled2Priority == true) displayBlank(2);
     if (buttonBeepEnable == true) singleBeep(50);
   }
   if (menuOpt == 2) {
@@ -83,7 +83,7 @@ void menuOpts(int menuOpt) {
     timerShow = true;
     menuShow = false;
     lastPage = 2;
-    if (oled2Page = 2 && oled2Priority == true) displayBlank(2);
+    if (oled2Page == 2 && oled2Priority == true) displayBlank(2);
     if (buttonBeepEnable == true) singleBeep(50);
   }
   if (menuOpt == 3) {
@@ -91,7 +91,7 @@ void menuOpts(int menuOpt) {
     tempShow = true;
     menuShow = false;
     lastPage = 3;
-    if (oled2Page = 3 && oled2Priority == true) displayBlank(2);
+    if (oled2Page == 3 && oled2Priority == true) displayBlank(2);
     if (buttonBeepEnable == true) singleBeep(50);
   }
   if (menuOpt == 4) {
@@ -99,7 +99,7 @@ void menuOpts(int menuOpt) {
     radioShow = true;
     menuShow = false;
     lastPage = 4;
-    if (oled2Page = 4 && oled2Priority == true) displayBlank(2);
+    if (oled2Page == 4 && oled2Priority == true) displayBlank(2);
     if (buttonBeepEnable == true) singleBeep(50);
   }
 }
