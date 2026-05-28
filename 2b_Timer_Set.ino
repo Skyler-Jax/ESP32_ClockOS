@@ -63,7 +63,7 @@ void getTimerHour() {
           setBit = false;
           if (buttonBeepEnable == true) singleBeep(20);
           return;
-        }        
+        }
       }
     }
   }
@@ -124,7 +124,7 @@ void getTimerMin() {
           setBit = false;
           if (buttonBeepEnable == true) singleBeep(20);
           return;
-        }        
+        }
       }
     }
   }
@@ -185,7 +185,7 @@ void getTimerSec() {
           setBit = false;
           if (infoChimeEnable == true) successChime();
           return;
-        }        
+        }
       }
     }
   }
