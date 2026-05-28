@@ -76,6 +76,112 @@ void errorChime() {
   noTone(chime);
 }
 
+///////////////////////
+//Graphics generation//
+///////////////////////
+/*Power status icon on menu page*/
+void dcInputIcon(bool onDC, int oledDisp, int posX, int posY) {
+  if (oledDisp == 1) {
+    if (onDC == false) oled1.drawBitmap(posX, posY, bmp_usb, 24, 14, WHITE);
+      else if (onDC == true) {
+      if (battLvl == 4) oled1.drawBitmap(posX, posY, bmp_batt4, 24, 14, WHITE);
+      if (battLvl == 3) oled1.drawBitmap(posX, posY, bmp_batt3, 24, 14, WHITE);
+      if (battLvl == 2) oled1.drawBitmap(posX, posY, bmp_batt2, 24, 14, WHITE);
+      if (battLvl == 1) oled1.drawBitmap(posX, posY, bmp_batt1, 24, 14, WHITE);
+      if (battLvl == 0) oled1.drawBitmap(posX, posY, bmp_batt0, 24, 14, WHITE);
+    }
+  }
+    if (oledDisp == 2) {
+    if (onDC == false) oled2.drawBitmap(posX, posY, bmp_usb, 24, 14, WHITE);
+      else if (onDC == true) {
+      if (battLvl == 4) oled2.drawBitmap(posX, posY, bmp_batt4, 24, 14, WHITE);
+      if (battLvl == 3) oled2.drawBitmap(posX, posY, bmp_batt3, 24, 14, WHITE);
+      if (battLvl == 2) oled2.drawBitmap(posX, posY, bmp_batt2, 24, 14, WHITE);
+      if (battLvl == 1) oled2.drawBitmap(posX, posY, bmp_batt1, 24, 14, WHITE);
+      if (battLvl == 0) oled2.drawBitmap(posX, posY, bmp_batt0, 24, 14, WHITE);
+    }
+  }
+}
+
+/*Timer active animation*///x101 y0
+void drawTimerBMP(int timerBMP, int oledDisp, int posX, int posY) {
+  if (oledDisp == 1) {
+    if (timerBMP == 1) oled1.drawBitmap(posX, posY, bmp_timer1, 14, 24, WHITE);
+    if (timerBMP == 2) oled1.drawBitmap(posX, posY, bmp_timer2, 14, 24, WHITE);
+    if (timerBMP == 3) oled1.drawBitmap(posX, posY, bmp_timer3, 14, 24, WHITE);
+    if (timerBMP == 4) oled1.drawBitmap(posX, posY, bmp_timer4, 14, 24, WHITE);
+    if (timerBMP == 5) oled1.drawBitmap(posX, posY, bmp_timer5, 14, 24, WHITE);
+    if (timerBMP == 0) oled1.drawBitmap(posX, posY, bmp_timer6, 14, 24, WHITE);
+  }
+  if (oledDisp == 2) {
+    if (timerBMP == 1) oled2.drawBitmap(posX, posY, bmp_timer1, 14, 24, WHITE);
+    if (timerBMP == 2) oled2.drawBitmap(posX, posY, bmp_timer2, 14, 24, WHITE);
+    if (timerBMP == 3) oled2.drawBitmap(posX, posY, bmp_timer3, 14, 24, WHITE);
+    if (timerBMP == 4) oled2.drawBitmap(posX, posY, bmp_timer4, 14, 24, WHITE);
+    if (timerBMP == 5) oled2.drawBitmap(posX, posY, bmp_timer5, 14, 24, WHITE);
+    if (timerBMP == 0) oled2.drawBitmap(posX, posY, bmp_timer6, 14, 24, WHITE);
+  }
+}
+
+/*Radio signal strength bars*/
+void signalLevel(int oledDisp, int posX, int posY) {
+  short level = radio.getSignalLevel();
+  if (oledDisp == 1) {
+    oled1.drawBitmap(posX, posY, bmp_signalAntenna, 16, 16, WHITE);
+    if (level >= 0 && level <= 3) {
+      oled1.drawBitmap(posX + 16, posY, bmp_signal1, 3, 16, WHITE);
+    }
+    if (level >= 4 && level <= 7) {
+      oled1.drawBitmap(posX + 16, posY, bmp_signal1, 3, 16, WHITE);
+      oled1.drawBitmap(posX + 21, posY, bmp_signal2, 3, 16, WHITE);
+    }
+    if (level >= 8 && level <= 11) {
+      oled1.drawBitmap(posX + 16, posY, bmp_signal1, 3, 16, WHITE);
+      oled1.drawBitmap(posX + 21, posY, bmp_signal2, 3, 16, WHITE);
+      oled1.drawBitmap(posX + 26, posY, bmp_signal3, 3, 16, WHITE);
+    }
+    if (level >= 12 && level <= 15) {
+      oled1.drawBitmap(posX + 16, posY, bmp_signal1, 3, 16, WHITE);
+      oled1.drawBitmap(posX + 21, posY, bmp_signal2, 3, 16, WHITE);
+      oled1.drawBitmap(posX + 26, posY, bmp_signal3, 3, 16, WHITE);
+      oled1.drawBitmap(posX + 31, posY, bmp_signal4, 3, 16, WHITE);
+    }
+  }
+  if (oledDisp == 2) {
+    oled2.drawBitmap(posX, posY, bmp_signalAntenna, 16, 16, WHITE);
+    if (level >= 0 && level <= 3) {
+      oled2.drawBitmap(posX + 16, posY, bmp_signal1, 3, 16, WHITE);
+    }
+    if (level >= 4 && level <= 7) {
+      oled2.drawBitmap(posX + 16, posY, bmp_signal1, 3, 16, WHITE);
+      oled2.drawBitmap(posX + 21, posY, bmp_signal2, 3, 16, WHITE);
+    }
+    if (level >= 8 && level <= 11) {
+      oled2.drawBitmap(posX + 16, posY, bmp_signal1, 3, 16, WHITE);
+      oled2.drawBitmap(posX + 21, posY, bmp_signal2, 3, 16, WHITE);
+      oled2.drawBitmap(posX + 26, posY, bmp_signal3, 3, 16, WHITE);
+      }
+    if (level >= 12 && level <= 15) {
+      oled2.drawBitmap(posX + 16, posY, bmp_signal1, 3, 16, WHITE);
+      oled2.drawBitmap(posX + 21, posY, bmp_signal2, 3, 16, WHITE);
+      oled2.drawBitmap(posX + 26, posY, bmp_signal3, 3, 16, WHITE);
+      oled2.drawBitmap(posX + 31, posY, bmp_signal4, 3, 16, WHITE);
+    }
+  }
+}
+
+/*Stereo/mono icon*/
+void stereoIcon(bool stereo, int oledDisp, int posX, int posY) {
+  if (oledDisp == 1) {
+    if (stereo == true) oled1.drawBitmap(posX, posY, bmp_stereo, 40, 16, WHITE);
+    else oled1.drawBitmap(posX, posY, bmp_mono, 18, 16, WHITE);
+  }
+  if (oledDisp == 2) {
+    if (stereo == true) oled2.drawBitmap(posX, posY, bmp_stereo, 40, 16, WHITE);
+    else oled2.drawBitmap(posX, posY, bmp_mono, 18, 16, WHITE);
+  }
+}
+
 /////////////////////////
 //Timekeeping Functions//
 /////////////////////////
@@ -114,7 +220,7 @@ void nightModeTimer() {
       previousNightModeCount = masterClock;
       nightModeTime--;
     }
-  } else if (nightModeTime == 0 && lightLevel < 128) {
+  } else if (nightModeTime == 0 && lightLevel < 76) {
     nightModeActive = true;
     displayBlank(1);
     displayBlank(2);
@@ -124,7 +230,7 @@ void nightModeTimer() {
 void nightModeActivity() {
   resetCounters();
   previousNightModeCount = 0;
-  nightModeTime = 15;
+  nightModeTime = 5;
 	nightModeActive = false;
 }
 
@@ -151,15 +257,17 @@ void runTimer() {
         }
       }else if (timerHour == 0 && timerMin == 0 && timerSec == 0) {
         timerBMP=0;
-        if (lastPage != 2) {
-          timerShow = true;
-          lastPage = 2;
+        if (oled2Page == 2) {
+          displayTimer(2, true);
+          oled2.invertDisplay(true);
+        } else {
+          displayTimer(1, true);
+          oled1.invertDisplay(true);
         }
-        displayTimer(1, true);
-        oled1.invertDisplay(true);
         if (infoChimeEnable == true) doubleBeep(50);
-        oled1.invertDisplay(false);        
-      }      
+        if (oled2Page == 2) oled2.invertDisplay(false);
+        else oled1.invertDisplay(false);
+      }
     }
   }
 }
@@ -181,4 +289,15 @@ void resetTimer(int option) {
     previousTimerRefresh = 0;
     if (buttonBeepEnable == true) successChime();
   }
+}
+
+//////////////////
+//Misc functions//
+//////////////////
+void battLevel(int battChk) {
+  if (battChk > 1060) battLvl = 4;
+  else if (battChk < 1010) battLvl = 3;
+  else if (battChk < 960) battLvl = 2;
+  else if (battChk < 860) battLvl = 1;
+  else if (battChk < 820) battLvl = 0;
 }
