@@ -18,7 +18,7 @@ void displayTimer(int oledDisp, bool oledOverride) {
         oled1.print("Timer");
         oled1.drawLine(0, 25, 127, 25, SSD1306_WHITE);
         oled1.drawLine(0, 26, 127, 26, SSD1306_WHITE);
-        if (timerRun == true) drawTimerBMP(timerBMP, 1);
+        if (timerRun == true) drawTimerBMP(timerBMP, 1, 101, 0);
         drawTimerCount(1);
         oled1.display();    //Draw frame on display
       }
@@ -57,10 +57,9 @@ void displayTimer(int oledDisp, bool oledOverride) {
 
       /*Toggle current page for subdisplay priority*/
       if (key == 'D') {
-        if (oled2Priority == true && oled2Page == 2) oled2Priority = !oled2Priority;
+        if (oled2Priority == true && oled2Page == 2) oled2Priority = 0;
         else {
-          oled2Priority = true;
-          oled2Page = 2;
+          oled2Priority = 2;
           displayBlank(1);
           menuShow = true;
           lastPage = 0;
@@ -86,12 +85,12 @@ void displayTimer(int oledDisp, bool oledOverride) {
         oled2.print("Timer");
         oled2.drawLine(0, 25, 127, 25, SSD1306_WHITE);
         oled2.drawLine(0, 26, 127, 26, SSD1306_WHITE);
-        if (timerRun == true) drawTimerBMP(timerBMP, 2);
+        if (timerRun == true) drawTimerBMP(timerBMP, 2, 101, 0);
         drawTimerCount(2);
         oled2.display();    //Draw frame on display
       }
     }
-    
+
     /*Read keypad key press and process selection*/
     char key = keypad.getKey();
     if (key != NO_KEY) {
@@ -127,11 +126,10 @@ void displayTimer(int oledDisp, bool oledOverride) {
           if (buttonBeepEnable == true) singleBeep(50);
         }
         menuShow = true;
-        lastPage = 0;
         resetCounters();
       }
-    }    
-  }    
+    }
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -165,27 +163,5 @@ void drawTimerCount(int oledDisp) {
     oled2.print(":");
     if (timerSec < 10) oled2.print("0");
     oled2.print(timerSec);
-  }
-}
-
-////////////////////////////////////////////////////////////////////
-//Function for cycling and drawing timer animation on page display//
-////////////////////////////////////////////////////////////////////
-void drawTimerBMP(int timerBMP, int oledDisp) {
-  if (oledDisp == 1) {
-    if (timerBMP == 1) oled1.drawBitmap(101, 0, bmp_timer1, 14, 24, WHITE);
-    if (timerBMP == 2) oled1.drawBitmap(101, 0, bmp_timer2, 14, 24, WHITE);
-    if (timerBMP == 3) oled1.drawBitmap(101, 0, bmp_timer3, 14, 24, WHITE);
-    if (timerBMP == 4) oled1.drawBitmap(101, 0, bmp_timer4, 14, 24, WHITE);
-    if (timerBMP == 5) oled1.drawBitmap(101, 0, bmp_timer5, 14, 24, WHITE);
-    if (timerBMP == 0) oled1.drawBitmap(101, 0, bmp_timer6, 14, 24, WHITE);
-  }
-  if (oledDisp == 2) {
-    if (timerBMP == 1) oled2.drawBitmap(101, 0, bmp_timer1, 14, 24, WHITE);
-    if (timerBMP == 2) oled2.drawBitmap(101, 0, bmp_timer2, 14, 24, WHITE);
-    if (timerBMP == 3) oled2.drawBitmap(101, 0, bmp_timer3, 14, 24, WHITE);
-    if (timerBMP == 4) oled2.drawBitmap(101, 0, bmp_timer4, 14, 24, WHITE);
-    if (timerBMP == 5) oled2.drawBitmap(101, 0, bmp_timer5, 14, 24, WHITE);
-    if (timerBMP == 0) oled2.drawBitmap(101, 0, bmp_timer6, 14, 24, WHITE);
   }
 }
