@@ -5,10 +5,10 @@ void setClock() {
   getDoW();
   getHour();
   getMin();
-  getAMPM();  
-  getYear();  
-  getMonth();  
-  getDay();  
+  getAMPM();
+  getYear();
+  getMonth();
+  getDay();
   if (setAMPM == 2) {
     setHour = setHour + 12;
   } else if (setAMPM == 1 && setHour == 12) {
@@ -21,10 +21,10 @@ void setClock() {
   }
   byte DoW = setDoW;
   byte Hour = setHour;
-  byte Minute = setMin;  
+  byte Minute = setMin;
   byte Year = setYear;
   byte Month = setMonth;
-  byte Day = setDay;  
+  byte Day = setDay;
   if (confirmSave() == true) {
     RTC.setClockMode(true);
     RTC.setDoW(DoW);
@@ -111,7 +111,7 @@ void getDoW() {
           memset(inputBuffer, 0, sizeof(inputBuffer));
           setBit = false;
           if (buttonBeepEnable == true) singleBeep(20);
-        }        
+        }
       }
     }
   }
@@ -176,7 +176,7 @@ void getHour() {
           memset(inputBuffer, 0, sizeof(inputBuffer));
           setBit = false;
           if (buttonBeepEnable == true) singleBeep(20);
-        }        
+        }
       }
     }
   }
@@ -241,7 +241,7 @@ void getMin() {
           memset(inputBuffer, 0, sizeof(inputBuffer));
           setBit = false;
           if (buttonBeepEnable == true) singleBeep(20);
-        }        
+        }
       }
     }
   }
@@ -308,7 +308,7 @@ void getAMPM() {
           memset(inputBuffer, 0, sizeof(inputBuffer));
           setBit = false;
           if (buttonBeepEnable == true) singleBeep(20);
-        }        
+        }
       }
     }
   }
@@ -373,7 +373,7 @@ void getYear() {
           memset(inputBuffer, 0, sizeof(inputBuffer));
           setBit = false;
           if (buttonBeepEnable == true) singleBeep(20);
-        }        
+        }
       }
     }
   }
@@ -438,7 +438,7 @@ void getMonth() {
           memset(inputBuffer, 0, sizeof(inputBuffer));
           setBit = false;
           if (buttonBeepEnable == true) singleBeep(20);
-        }        
+        }
       }
     }
   }
@@ -684,7 +684,7 @@ void getDay() {
               if (buttonBeepEnable == true) singleBeep(20);
             }
           }
-        }        
+        }
       }
     }
   }
@@ -728,7 +728,7 @@ bool confirmSave() {
         setBit = false;
         if (infoChimeEnable == true) errorChime();
         return false;
-      }        
+      }
     }
   }
 }
