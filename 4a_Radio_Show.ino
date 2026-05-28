@@ -32,14 +32,13 @@ void displayRadio(int oledDisp) {
           oled1.setCursor(50, 0);
           oled1.setTextSize(1);
           oled1.print("Output Muted");
-        } else signalLevel(oledDisp);
+        } else signalLevel(oledDisp, 0, 0);
         oled1.setTextSize(3);
         oled1.setCursor(2, 40);
         oled1.print(frequency, 1);
         oled1.setTextSize(1);
         oled1.print(" MHz");
-        if (stereo == true && stby == false && muted == false) oled1.drawBitmap(58, 0, bmp_stereo, 40, 16, WHITE);
-        else if (stereo == false && stby == false && muted == false) oled1.drawBitmap(58, 0, bmp_mono, 18, 16, WHITE);
+        if (stby == false && muted == false) stereoIcon(stereo, oledDisp, 58, 0);
         oled1.display();    //Draw frame on display
       }
     }
@@ -85,17 +84,15 @@ void displayRadio(int oledDisp) {
       if (key == '#') {
         radioShow = false;
         menuShow = true;
-        lastPage = 0;
         resetCounters();
         if (buttonBeepEnable == true) singleBeep(50);
       }
 
       /*Toggle current page for subdisplay priority*/
       if (key == 'D') {
-        if (oled2Priority == true && oled2Page == 4) oled2Priority = !oled2Priority;
+        if (oled2Priority == true && oled2Page == 4) oled2Priority = 0;
         else {
-          oled2Priority = true;
-          oled2Page = 4;
+          oled2Priority = 4;
           displayBlank(1);
           menuShow = true;
           lastPage = 0;
@@ -135,65 +132,15 @@ void displayRadio(int oledDisp) {
           oled2.setCursor(50, 0);
           oled2.setTextSize(1);
           oled2.print("Output Muted");
-        } else signalLevel(oledDisp);
+        } else signalLevel(oledDisp, 0, 0);
         oled2.setTextSize(3);
         oled2.setCursor(2, 40);
         oled2.print(frequency, 1);
         oled2.setTextSize(1);
         oled2.print(" MHz");
-        if (stereo == true && stby == false && muted == false) oled2.drawBitmap(58, 0, bmp_stereo, 40, 16, WHITE);
-        else if (stereo == false && stby == false && muted == false) oled2.drawBitmap(58, 0, bmp_mono, 18, 16, WHITE);
+        if (stby == false && muted == false) stereoIcon(stereo, oledDisp, 58, 0);
         oled2.display();    //Draw frame on display
       }
-    }
-  }  
-}
-
-///////////////////////////////////////////////////
-//Function for drawing radio signal strength bars//
-///////////////////////////////////////////////////
-void signalLevel(int oledDisp) {
-  short level = radio.getSignalLevel();
-  if (oledDisp == 1) {
-    oled1.drawBitmap(0, 0, bmp_signalAntenna, 16, 16, WHITE);
-    if (level >= 0 && level <= 3) {
-      oled1.drawBitmap(16, 0, bmp_signal1, 3, 16, WHITE);
-    }
-    if (level >= 4 && level <= 7) {
-      oled1.drawBitmap(16, 0, bmp_signal1, 3, 16, WHITE);
-      oled1.drawBitmap(21, 0, bmp_signal2, 3, 16, WHITE);
-    }
-    if (level >= 8 && level <= 11) {
-      oled1.drawBitmap(16, 0, bmp_signal1, 3, 16, WHITE);
-      oled1.drawBitmap(21, 0, bmp_signal2, 3, 16, WHITE);
-      oled1.drawBitmap(26, 0, bmp_signal3, 3, 16, WHITE);
-    }
-    if (level >= 12 && level <= 15) {
-      oled1.drawBitmap(16, 0, bmp_signal1, 3, 16, WHITE);
-      oled1.drawBitmap(21, 0, bmp_signal2, 3, 16, WHITE);
-      oled1.drawBitmap(26, 0, bmp_signal3, 3, 16, WHITE);
-      oled1.drawBitmap(31, 0, bmp_signal4, 3, 16, WHITE);
-    }
-  }
-  if (oledDisp == 2) {
-    oled2.drawBitmap(0, 0, bmp_signalAntenna, 16, 16, WHITE);
-    if (level >= 0 && level <= 3) {
-      oled2.drawBitmap(16, 0, bmp_signal1, 3, 16, WHITE);
-    }
-    if (level >= 4 && level <= 7) {
-      oled2.drawBitmap(16, 0, bmp_signal1, 3, 16, WHITE);
-      oled2.drawBitmap(21, 0, bmp_signal2, 3, 16, WHITE);
-    }
-    if (level >= 8 && level <= 11) {
-      oled2.drawBitmap(16, 0, bmp_signal1, 3, 16, WHITE);
-      oled2.drawBitmap(21, 0, bmp_signal2, 3, 16, WHITE);
-      oled2.drawBitmap(26, 0, bmp_signal3, 3, 16, WHITE);
-      }
-    if (level >= 12 && level <= 15) {
-      oled2.drawBitmap(16, 0, bmp_signal1, 3, 16, WHITE);
-      oled2.drawBitmap(21, 0, bmp_signal2, 3, 16, WHITE);
-      oled2.drawBitmap(26, 0, bmp_signal3, 3, 16, WHITE);
-      oled2.drawBitmap(31, 0, bmp_signal4, 3, 16, WHITE);
     }
   }
 }
