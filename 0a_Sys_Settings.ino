@@ -16,11 +16,11 @@ void sysSettings() {
     oled1.print("A - Hour Chime ");
     if (hourChimeEnable == true) oled1.println("On");
     else oled1.println("Off");
-    oled1.print("B - Button Beep ");
-    if (buttonBeepEnable == true) oled1.println("On");
-    else oled1.println("Off");
-    oled1.print("C - Info Chime ");
+    oled1.print("B - Info Chime ");
     if (infoChimeEnable == true) oled1.println("On");
+    else oled1.println("Off");
+    oled1.print("C - Button Beep ");
+    if (buttonBeepEnable == true) oled1.println("On");
     else oled1.println("Off");
     oled1.print("D - Night Mode ");
     if (nightModeEnable == true) oled1.println("On");
@@ -44,16 +44,16 @@ void sysSettings() {
 
     /*Toggle button beep*/
     if (key == 'B') {
-      buttonBeepEnable = !buttonBeepEnable;
-      EEPROM.writeBool(0xA1, buttonBeepEnable);
+      infoChimeEnable = !infoChimeEnable;
+      EEPROM.writeBool(0xA1, infoChimeEnable);
       EEPROM.commit();
       if (buttonBeepEnable == true) singleBeep(20);
     }
 
     /*Toggle info chime*/
     if (key == 'C') {
-      infoChimeEnable = !infoChimeEnable;
-      EEPROM.writeBool(0xA2, infoChimeEnable);
+      buttonBeepEnable = !buttonBeepEnable;
+      EEPROM.writeBool(0xA2, buttonBeepEnable);
       EEPROM.commit();
       if (buttonBeepEnable == true) singleBeep(20);
     }
@@ -71,6 +71,6 @@ void sysSettings() {
       sysSettingsShow = false;
       menuShow = true;
       if (buttonBeepEnable == true) singleBeep(20);
-    }    
+    }
   }
 }
