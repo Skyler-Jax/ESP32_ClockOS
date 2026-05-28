@@ -114,17 +114,15 @@ void displayClock(int oledDisp) {
       if (key == '#') {
         clockShow = false;
         menuShow = true;
-        lastPage = 0;
         resetCounters();
         if (buttonBeepEnable == true) singleBeep(50);
       }
 
       /*Toggle current page for subdisplay priority*/
       if (key == 'D') {
-        if (oled2Priority == true && oled2Page == 1) oled2Priority = !oled2Priority;
+        if (oled2Priority == true && oled2Page == 1) oled2Priority = 0;
         else {
-          oled2Priority = true;
-          oled2Page = 1;
+          oled2Priority = 1;
           displayBlank(1);
           menuShow = true;
           lastPage = 0;
@@ -132,7 +130,7 @@ void displayClock(int oledDisp) {
         }
         if (buttonBeepEnable == true) singleBeep(20);
       }
-    }    
+    }
   }
 
   /*Code for secondary OLED 'subdisplay'*/
@@ -147,38 +145,46 @@ void displayClock(int oledDisp) {
         oled2.clearDisplay();   //Clear display buffer for new frame
 
         /*Print the day of the week*/
-        if (DoW == 1) {
-          oled2.setCursor(28, 0);
+          if (DoW == 1) {
+          if (menuShow == true) oled2.setCursor(28, 0);
+          else oled2.setCursor(0, 0);
           oled2.setTextSize(2);
           oled2.print("Sunday");
         }
         if (DoW == 2) {
-          oled2.setCursor(28, 0);
+          if (menuShow == true) oled2.setCursor(28, 0);
+          else oled2.setCursor(0, 0);
           oled2.setTextSize(2);
           oled2.print("Monday");
         }
         if (DoW == 3) {
-          oled2.setCursor(21, 0);
+          if (menuShow == true) oled2.setCursor(21, 0);
+          else oled2.setCursor(0, 0);
           oled2.setTextSize(2);
           oled2.print("Tuesday");
         }
         if (DoW == 4) {
-          oled2.setCursor(10, 0);
+          if (menuShow == true) oled2.setCursor(10, 0);
+          else oled2.setCursor(0, 0);
           oled2.setTextSize(2);
-          oled2.print("Wednesday");
+          if (menuShow == true) oled2.print("Wednesday");
+          else oled2.print("Wed'sday");
         }
         if (DoW == 5) {
-          oled2.setCursor(16, 0);
+          if (menuShow == true) oled2.setCursor(16, 0);
+          else oled2.setCursor(0, 0);
           oled2.setTextSize(2);
           oled2.print("Thursday");
         }
         if (DoW == 6) {
-          oled2.setCursor(28, 0);
+          if (menuShow == true) oled2.setCursor(28, 0);
+          else oled2.setCursor(0, 0);
           oled2.setTextSize(2);
           oled2.print("Friday");
         }
         if (DoW == 7) {
-          oled2.setCursor(16, 0);
+          if (menuShow == true) oled2.setCursor(16, 0);
+          else oled2.setCursor(0, 0);
           oled2.setTextSize(2);
           oled2.print("Saturday");
         }
@@ -193,6 +199,8 @@ void displayClock(int oledDisp) {
         oled2.print(day);
         oled2.print("/20");
         oled2.println(year);
+
+        if (menuShow == false) dcInputIcon(onDC, oledDisp, 101, 1);
 
         /*Seperate date and time sections with a horizontal line*/
         oled2.drawLine(0, 36, 127, 36, SSD1306_WHITE);
