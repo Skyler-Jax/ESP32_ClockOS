@@ -19,16 +19,16 @@ void displayTemp(int oledDisp) {
         /*Draw temp on page display*/
         if (nightModeActive == false) {   //Only draw when Night Mode blanking inactive
           oled1.clearDisplay();   //Clear display buffer for new frame
-          oled1.drawBitmap(0, 7, bmp_temp, 16, 16, WHITE);
+          oled1.drawBitmap(4, 7, bmp_temp, 16, 16, WHITE);
           oled1.drawLine(0, 31, 127, 31, SSD1306_WHITE);
           oled1.drawLine(0, 32, 127, 32, SSD1306_WHITE);
-          oled1.drawBitmap(0, 42, bmp_humidity, 16, 16, WHITE);
+          oled1.drawBitmap(4, 42, bmp_humidity, 16, 16, WHITE);
           oled1.setTextSize(3);
-          oled1.setCursor(26,4);
+          oled1.setCursor(27,4);
           oled1.print(tempF, 1);
           oled1.setTextSize(2);
           oled1.print(" F");
-          oled1.setCursor(26, 38);
+          oled1.setCursor(27, 38);
           oled1.setTextSize(3);
           oled1.print(sht.getHumidity(), 1);
           oled1.setTextSize(2);
@@ -48,17 +48,15 @@ void displayTemp(int oledDisp) {
       if (key == '#') {
         tempShow = false;
         menuShow = true;
-        lastPage = 0;
         resetCounters();
         if (buttonBeepEnable == true) singleBeep(50);
       }
 
       /*Toggle current page for subdisplay priority*/
       if (key == 'D') {
-        if (oled2Priority == true && oled2Page == 3) oled2Priority = !oled2Priority;
+        if (oled2Priority == true && oled2Page == 3) oled2Priority = 0;
         else {
-          oled2Priority = true;
-          oled2Page = 3;
+          oled2Priority = 3;
           displayBlank(1);
           menuShow = true;
           lastPage = 0;
@@ -66,7 +64,7 @@ void displayTemp(int oledDisp) {
         }
         if (buttonBeepEnable == true) singleBeep(20);
       }
-    } 
+    }
   }
 
   /*Code for secondary OLED 'subdisplay'*/
@@ -85,23 +83,23 @@ void displayTemp(int oledDisp) {
         /*Draw temp on page display*/
         if (nightModeActive == false) {   //Only draw when Night Mode blanking inactive
           oled2.clearDisplay();   //Clear display buffer for new frame
-          oled2.drawBitmap(0, 6, bmp_temp, 16, 16, WHITE);
+          oled2.drawBitmap(4, 7, bmp_temp, 16, 16, WHITE);
           oled2.drawLine(0, 31, 127, 31, SSD1306_WHITE);
           oled2.drawLine(0, 32, 127, 32, SSD1306_WHITE);
-          oled2.drawBitmap(0, 43, bmp_humidity, 16, 16, WHITE);
+          oled2.drawBitmap(4, 42, bmp_humidity, 16, 16, WHITE);
           oled2.setTextSize(3);
-          oled2.setCursor(26,4);
+          oled2.setCursor(27,4);
           oled2.print(tempF, 1);
           oled2.setTextSize(2);
           oled2.print(" F");
-          oled2.setCursor(26, 38);
+          oled2.setCursor(27, 38);
           oled2.setTextSize(3);
           oled2.print(sht.getHumidity(), 1);
           oled2.setTextSize(2);
           oled2.print(" %");
-          oled2.display();//Draw frame on display
+          oled2.display();    //Draw frame on display
         }
       }
-    }    
+    }
   }
 }
