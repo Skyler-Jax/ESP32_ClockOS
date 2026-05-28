@@ -31,7 +31,7 @@ void setRadio() {
         oled1.print(key);
         oled1.display();
         if (buttonBeepEnable == true) singleBeep(20);
-      } 
+      }
       if (key == '*') {
         char key = '.';
         inputBuffer[bufferIndex] = key;
@@ -39,7 +39,7 @@ void setRadio() {
         oled1.print(key);
         oled1.display();
         if (buttonBeepEnable == true) singleBeep(20);
-      }      
+      }
       if (key == '#') {
         if (bufferIndex == 0) {
           setBit = false;
@@ -60,7 +60,7 @@ void setRadio() {
           setBit = 0;
           previousRadioRefresh = 0;
           if (infoChimeEnable == true) successChime();
-        }        
+        }
       }
     }
   }
