@@ -32,7 +32,11 @@ void sysSettings() {
   char key = keypad.getKey();
   if (key != NO_KEY) {
     delay(50);    //Debounce delay
-    if (nightModeEnable == true) nightModeActivity();    //Wake from night mode
+    if (nightModeEnable == true && nightModeActive == true) { //Wake from night mode
+      nightModeActivity();
+      return loop();
+    }
+    else nightModeActivity();
 
     /*Toggle hour chime*/
     if (key == 'A') {

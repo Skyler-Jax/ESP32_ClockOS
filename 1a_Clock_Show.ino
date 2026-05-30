@@ -15,38 +15,38 @@ void displayClock(int oledDisp) {
         oled1.clearDisplay();   //Clear display buffer for new frame
 
         /*Print the day of the week*/
-        if (DoW == 1) {
-          oled1.setCursor(29, 0);
+          if (DoW == 1) {
+          oled1.setCursor(0, 0);
           oled1.setTextSize(2);
           oled1.print("Sunday");
         }
         if (DoW == 2) {
-          oled1.setCursor(29, 0);
+          oled1.setCursor(0, 0);
           oled1.setTextSize(2);
           oled1.print("Monday");
         }
         if (DoW == 3) {
-          oled1.setCursor(22, 0);
+          oled1.setCursor(0, 0);
           oled1.setTextSize(2);
           oled1.print("Tuesday");
         }
         if (DoW == 4) {
-          oled1.setCursor(10, 0);
+          oled1.setCursor(0, 0);
           oled1.setTextSize(2);
-          oled1.print("Wednesday");
+          oled1.print("Wed'sday");
         }
         if (DoW == 5) {
-          oled1.setCursor(16, 0);
+          oled1.setCursor(0, 0);
           oled1.setTextSize(2);
           oled1.print("Thursday");
         }
         if (DoW == 6) {
-          oled1.setCursor(29, 0);
+          oled1.setCursor(0, 0);
           oled1.setTextSize(2);
           oled1.print("Friday");
         }
         if (DoW == 7) {
-          oled1.setCursor(16, 0);
+          oled1.setCursor(0, 0);
           oled1.setTextSize(2);
           oled1.print("Saturday");
         }
@@ -61,6 +61,8 @@ void displayClock(int oledDisp) {
         oled1.print(day);
         oled1.print("/20");
         oled1.println(year);
+
+        dcInputIcon(onDC, oledDisp, 101, 1);
 
         /*Seperate date and time sections with a horizontal line*/
         oled1.drawLine(0, 36, 127, 36, SSD1306_WHITE);
@@ -101,7 +103,11 @@ void displayClock(int oledDisp) {
     char key = keypad.getKey();
     if (key != NO_KEY){
       delay(50);    //Debounce timer
-      if (nightModeEnable == true) nightModeActivity();   //Wake from night mode
+      if (nightModeEnable == true && nightModeActive == true) { //Wake from night mode
+        nightModeActivity();
+        return loop();
+      }
+      else nightModeActivity();
 
       /*Enter clock set mode*/
       if (key == '*') {
@@ -200,7 +206,7 @@ void displayClock(int oledDisp) {
         oled2.print("/20");
         oled2.println(year);
 
-        if (menuShow == false) dcInputIcon(onDC, oledDisp, 101, 1);
+        dcInputIcon(onDC, oledDisp, 101, 1);
 
         /*Seperate date and time sections with a horizontal line*/
         oled2.drawLine(0, 36, 127, 36, SSD1306_WHITE);

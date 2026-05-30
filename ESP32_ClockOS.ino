@@ -130,6 +130,11 @@ const unsigned char bmp_usb [] PROGMEM = {
 	0x42, 0x0c, 0x7e, 0x40, 0x0e, 0x7f, 0xff, 0xff, 0x7e, 0x10, 0x0e, 0x3c, 0x10, 0x0c, 0x18, 0x0b,
 	0x88, 0x00, 0x07, 0x80, 0x00, 0x03, 0x80, 0x00, 0x00, 0x00
 };
+const unsigned char bmp_dc [] PROGMEM = {
+	0x00, 0x00, 0x00, 0x01, 0xe3, 0x80, 0x01, 0x36, 0x00, 0x01, 0x14, 0x00, 0x01, 0x14, 0x00, 0x01, 
+	0x36, 0x00, 0x01, 0xe3, 0x80, 0x00, 0x00, 0x00, 0xf7, 0xbd, 0xef, 0xf7, 0xbd, 0xef, 0x00, 0x00, 
+	0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00
+};
 const unsigned char bmp_batt0 [] PROGMEM = {
 	0x00, 0x00, 0x00, 0x3f, 0xff, 0xf0, 0x60, 0x00, 0x18, 0x41, 0x83, 0x08, 0x40, 0xc6, 0x0e, 0x40,
 	0x6c, 0x0a, 0x40, 0x38, 0x0a, 0x40, 0x38, 0x0a, 0x40, 0x6c, 0x0a, 0x40, 0xc6, 0x0e, 0x41, 0x83,
@@ -190,7 +195,7 @@ int timerSec = 0;
 int timerBMP = 0;
 int sigStrength;
 int battLvl;
-int nightModeTime = 5;
+int nightModeTime;
 unsigned long masterClock;
 unsigned long previousTimeRefresh = 0;
 unsigned long previousTimerRefresh = 0;
@@ -350,40 +355,60 @@ void setup() {
 /////////////////////
 void loop() {
 
-	/*Timekeeping for other functions*/
+	/*Timekeeping for other functions
+		Related functions in 5_Misc*/
 	runMasterClock();
 	runTime();
 	runTimer();
 	if (nightModeEnable == true) nightModeTimer();
+	
 
-	/*Detect power source & low battery protection*/
+
+	/*Detect power source & low battery protection
+		Related functions in 5_Misc*/
   int battChg = analogRead(battery);
 	battLevel(battChg);
-	if (battChg > 0) onDC = true;
-	else onDC = false;
-	if (battChg < 740) esp_deep_sleep_start();
+	if (battChg == 0) onDC = false;
+	else if (battChg > 0) onDC = true;
+	//if (battChg < 740 && battChg != 0) esp_deep_sleep_start(); //Disabled until correct batt levels established
 
-	/*Dim primary display in low light*/
+	/*Dim primary display in low light & blank display for night mode*/
 	int lightLevel = analogRead(ldr);
-	if (lightLevel < 158) oled1.dim(true);
-	else if (lightLevel > 102) oled1.dim(false);
-	if (lightLevel < 76) digitalWrite(boardLED, HIGH);
-	else if (lightLevel > 102) digitalWrite(boardLED, LOW);
+	if (lightLevel < 76) {
+		oled1.dim(true);
+		digitalWrite(boardLED, HIGH);
+	}
+	else if (lightLevel > 102) {
+		oled1.dim(false);
+		digitalWrite(boardLED, LOW);
+	}
+	if (lightLevel < 76 && nightModeTime == 0) {
+    nightModeActive = true;
+    displayBlank(1);
+    displayBlank(2);
+  }
+	else if (lightLevel > 102 && nightModeActive == true) {
+		nightModeActive = false;
+		resetCounters();
+		oled1.display();
+		oled2.display();
+	}
 
-	/*Call priority display page on subscreen*/
-	if (oled2Priority != 0) oled2PriorityDisp();
+	/*Call priority display page on subscreen
+		Requires further debugging, disabled for now*/
+	//if (oled2Priority != 0) oled2PriorityDisp();
 
 	/*Call menu display page on main screen and update page on subscreen*/
 	if (menuShow == true) {
 		if (timerRun == false && stby == true && oled2Priority == 0) {
 			oled2Page = 1;
-			displayClock(2);
+			// displayClock(2);
 		} else if (timerRun == true && oled2Priority == 0) {
 			oled2Page = 2;
-    	displayTimer(2);
+    // 	displayTimer(2);
   	} else if (timerRun == false && stby == false && oled2Priority == 0) {
 			oled2Page = 4;
-     	displayRadio(2);
+    //  	displayRadio(2);
    	}
 		menu();
 	}
@@ -456,6 +481,24 @@ void loop() {
    	}
 		displayRadio(1);
 	}
+
+	/*Diagnostic output to TTY*/
+	Serial.write(27);
+	Serial.print("[2J"); // clear screen
+	Serial.write(27);
+	Serial.print("[H"); // cursor to home
+	Serial.print(lightLevel);
+	Serial.print("-Light Level (Analog)    ");
+	Serial.print(nightModeTime);
+	Serial.print("-Night Mode Timer    ");
+	if (nightModeActive == true) Serial.print("Yes");
+	if (nightModeActive == false) Serial.print(" No");
+	Serial.print("-Night Mode Active    ");
+	Serial.print(battChg);
+	Serial.print("-Battery Level (Analog)    ");
+	Serial.print(battLvl);
+	Serial.print("-Battery Level (Calculated)    ");
+	Serial.println();
 }
 
 /////////////////////////////////////////////////

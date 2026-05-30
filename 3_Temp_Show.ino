@@ -42,7 +42,11 @@ void displayTemp(int oledDisp) {
     char key = keypad.getKey();
     if (key != NO_KEY){
       delay(50);    //Debounce timer
-      if (nightModeEnable == true) nightModeActivity();   //Wake from night mode
+      if (nightModeEnable == true && nightModeActive == true) { //Wake from night mode
+        nightModeActivity();
+        return loop();
+      }
+      else nightModeActivity();
 
       /*Return to Main Menu*/
       if (key == '#') {

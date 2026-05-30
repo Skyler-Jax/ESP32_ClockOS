@@ -83,22 +83,24 @@ void errorChime() {
 void dcInputIcon(bool onDC, int oledDisp, int posX, int posY) {
   if (oledDisp == 1) {
     if (onDC == false) oled1.drawBitmap(posX, posY, bmp_usb, 24, 14, WHITE);
-      else if (onDC == true) {
-      if (battLvl == 4) oled1.drawBitmap(posX, posY, bmp_batt4, 24, 14, WHITE);
-      if (battLvl == 3) oled1.drawBitmap(posX, posY, bmp_batt3, 24, 14, WHITE);
-      if (battLvl == 2) oled1.drawBitmap(posX, posY, bmp_batt2, 24, 14, WHITE);
-      if (battLvl == 1) oled1.drawBitmap(posX, posY, bmp_batt1, 24, 14, WHITE);
-      if (battLvl == 0) oled1.drawBitmap(posX, posY, bmp_batt0, 24, 14, WHITE);
+    if (onDC == true) {
+      if (battLvl == 5) oled1.drawBitmap(posX, posY, bmp_batt4, 24, 14, WHITE);
+      if (battLvl == 4) oled1.drawBitmap(posX, posY, bmp_batt3, 24, 14, WHITE);
+      if (battLvl == 3) oled1.drawBitmap(posX, posY, bmp_batt2, 24, 14, WHITE);
+      if (battLvl == 2) oled1.drawBitmap(posX, posY, bmp_batt1, 24, 14, WHITE);
+      if (battLvl == 1) oled1.drawBitmap(posX, posY, bmp_batt0, 24, 14, WHITE);
+      if (battLvl == 0) oled1.drawBitmap(posX, posY, bmp_dc, 24, 14, WHITE);
     }
   }
-    if (oledDisp == 2) {
+  if (oledDisp == 2) {
     if (onDC == false) oled2.drawBitmap(posX, posY, bmp_usb, 24, 14, WHITE);
-      else if (onDC == true) {
-      if (battLvl == 4) oled2.drawBitmap(posX, posY, bmp_batt4, 24, 14, WHITE);
-      if (battLvl == 3) oled2.drawBitmap(posX, posY, bmp_batt3, 24, 14, WHITE);
-      if (battLvl == 2) oled2.drawBitmap(posX, posY, bmp_batt2, 24, 14, WHITE);
-      if (battLvl == 1) oled2.drawBitmap(posX, posY, bmp_batt1, 24, 14, WHITE);
-      if (battLvl == 0) oled2.drawBitmap(posX, posY, bmp_batt0, 24, 14, WHITE);
+    if (onDC == true) {
+      if (battLvl == 5) oled2.drawBitmap(posX, posY, bmp_batt4, 24, 14, WHITE);
+      if (battLvl == 4) oled2.drawBitmap(posX, posY, bmp_batt3, 24, 14, WHITE);
+      if (battLvl == 3) oled2.drawBitmap(posX, posY, bmp_batt2, 24, 14, WHITE);
+      if (battLvl == 2) oled2.drawBitmap(posX, posY, bmp_batt1, 24, 14, WHITE);
+      if (battLvl == 1) oled2.drawBitmap(posX, posY, bmp_batt0, 24, 14, WHITE);
+      if (battLvl == 0) oled2.drawBitmap(posX, posY, bmp_dc, 24, 14, WHITE);
     }
   }
 }
@@ -220,18 +222,19 @@ void nightModeTimer() {
       previousNightModeCount = masterClock;
       nightModeTime--;
     }
-  } else if (nightModeTime == 0 && lightLevel < 76) {
-    nightModeActive = true;
-    displayBlank(1);
-    displayBlank(2);
   }
+  // if (nightModeTime == 0 && lightLevel < 76) {
+  //   nightModeActive = true;
+  //   displayBlank(1);
+  //   displayBlank(2);
+  // }
 }
 
 void nightModeActivity() {
+  nightModeActive = false;
   resetCounters();
   previousNightModeCount = 0;
-  nightModeTime = 5;
-	nightModeActive = false;
+  nightModeTime = 6;
 }
 
 void runTimer() {
@@ -295,9 +298,10 @@ void resetTimer(int option) {
 //Misc functions//
 //////////////////
 void battLevel(int battChk) {
-  if (battChk > 1060) battLvl = 4;
-  else if (battChk < 1010) battLvl = 3;
-  else if (battChk < 960) battLvl = 2;
-  else if (battChk < 860) battLvl = 1;
-  else if (battChk < 820) battLvl = 0;
+  if (battChk != 0 && battChk > 1010) battLvl = 5;
+  else if (battChk != 0 && battChk < 1010) battLvl = 4;
+  else if (battChk != 0 && battChk < 960) battLvl = 3;
+  else if (battChk != 0 && battChk < 860) battLvl = 2;
+  else if (battChk != 0 && battChk < 820) battLvl = 1;
+  else if (battChk == 0) battLvl = 0;
 }

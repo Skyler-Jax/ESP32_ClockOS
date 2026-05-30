@@ -16,14 +16,31 @@ void menu() {
     oled1.print("A - Clock   B - Timer");
     oled1.setCursor(0, 50);
     oled1.print("C - Temp    D - Radio");
-    oled1.display();    //Draw frame on display
+    oled2.clearDisplay();
+    oled2.setTextSize(3);
+    oled2.setCursor(0, 0);
+    oled2.print("Setting");
+    oled2.drawLine(0, 25, 127, 25, SSD1306_WHITE);
+    oled2.drawLine(0, 26, 127, 26, SSD1306_WHITE);
+    oled2.setTextSize(1);
+    oled2.setCursor(0, 36);
+    oled2.print("1 - Systm   2 - Clock");
+    oled2.setCursor(0, 50);
+    oled2.print("3 - Temp    4 - Radio");
+    dcInputIcon(onDC, 1, 101, 4);
+    oled1.display();    //Draw frame on display 1
+    oled2.display();    //Draw frame on display 2
   }
 
   /*Read keypad key press and process selection*/
   char key = keypad.getKey();
   if (key != NO_KEY) {
     delay(50);    //Debounce delay
-    if (nightModeEnable == true) nightModeActivity();    //Wake from night mode
+    if (nightModeEnable == true && nightModeActive == true) { //Wake from night mode
+      nightModeActivity();
+      return loop();
+    }
+    else nightModeActivity();
 
     /*Enter system settings menu*/
     if (key == '1') {
@@ -62,6 +79,7 @@ void menu() {
       menuShow = !menuShow;
       radioShow = true;
       if (buttonBeepEnable == true) singleBeep(50);
+    
     }
   }
 }
