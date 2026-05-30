@@ -195,7 +195,7 @@ int timerSec = 0;
 int timerBMP = 0;
 int sigStrength;
 int battLvl;
-int nightModeTime;
+int nightModeTime = 6;
 unsigned long masterClock;
 unsigned long previousTimeRefresh = 0;
 unsigned long previousTimerRefresh = 0;
@@ -483,21 +483,21 @@ void loop() {
 	}
 
 	/*Diagnostic output to TTY*/
-	Serial.write(27);
-	Serial.print("[2J"); // clear screen
-	Serial.write(27);
-	Serial.print("[H"); // cursor to home
+	// Serial.write(27);
+	// Serial.print("[2J"); // clear screen
+	// Serial.write(27);
+	// Serial.print("[H"); // cursor to home
+	Serial.print("   Light Level (Analog)-");
 	Serial.print(lightLevel);
-	Serial.print("-Light Level (Analog)    ");
+	Serial.print("   Night Mode Timer-");
 	Serial.print(nightModeTime);
-	Serial.print("-Night Mode Timer    ");
+	Serial.print("   Night Mode Active-");
 	if (nightModeActive == true) Serial.print("Yes");
-	if (nightModeActive == false) Serial.print(" No");
-	Serial.print("-Night Mode Active    ");
+	if (nightModeActive == false) Serial.print("No ");
+	Serial.print("   Battery Level (Analog)-");
 	Serial.print(battChg);
-	Serial.print("-Battery Level (Analog)    ");
+	Serial.print("   Battery Level (Calculated)-");
 	Serial.print(battLvl);
-	Serial.print("-Battery Level (Calculated)    ");
 	Serial.println();
 }
 
