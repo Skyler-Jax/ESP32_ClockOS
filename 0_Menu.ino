@@ -49,6 +49,14 @@ void menu() {
       if (buttonBeepEnable == true) singleBeep(20);
     }
 
+    /*Enter temp settings menu*/
+        if (key == '3') {
+      menuShow = false;
+      tempSettingsShow = true;
+      if (buttonBeepEnable == true) singleBeep(20);
+    }
+
+
     /*Send selected option to flag setter*/
     if (key == 'A') menuOpts(1);
     if (key == 'B') menuOpts(2);

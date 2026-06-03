@@ -1,3 +1,4 @@
+#pragma region includes
 ////////////
 //Includes//
 ////////////
@@ -10,7 +11,10 @@
 #include <Adafruit_SSD1306.h>
 #include <Keypad.h>
 #include <WiFi.h>
+#include <I2CKeyPad.h>
+#pragma endregion includes
 
+#pragma region hardware_setup
 ////////////////
 //SHT31D setup//
 ////////////////
@@ -55,7 +59,9 @@ TEA5767 radio = TEA5767();
 int rstPinOLED = 12;
 Adafruit_SSD1306 oled1(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 Adafruit_SSD1306 oled2(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+#pragma endregion hardware_setup
 
+#pragma region bitmap_bytecodes
 /////////////////////////////////
 //Byte bitmaps for OLED display//
 /////////////////////////////////
@@ -160,7 +166,9 @@ const unsigned char bmp_batt4 [] PROGMEM = {
 	0x7b, 0xca, 0x4f, 0x7b, 0xca, 0x4f, 0x7b, 0xca, 0x4f, 0x7b, 0xca, 0x47, 0x7b, 0x8e, 0x40, 0x00,
 	0x08, 0x60, 0x00, 0x18, 0x3f, 0xff, 0xf0, 0x00, 0x00, 0x00
 };
+#pragma endregion bitmap_bytecodes
 
+#pragma region definitions_variables
 //////////////////////////////////
 //Digital/Analog Pin Definitions//
 //////////////////////////////////
@@ -209,6 +217,7 @@ const unsigned long timerInterval = 1000;
 const unsigned long tempInterval = 15000;
 const unsigned long radioInterval = 2000;
 float tempF;
+float tempComp;
 float frequency;
 bool h12;
 bool AMPM;
@@ -228,6 +237,7 @@ int oled2Priority = 0;
 bool setBit = false;
 bool menuShow = false;
 bool sysSettingsShow = false;
+bool tempSettingsShow = false;
 bool clockShow = true;
 bool timerShow = false;
 bool timerRun = false;
@@ -242,7 +252,10 @@ bool hourChimeEnable;
 bool buttonBeepEnable;
 bool infoChimeEnable;
 bool nightModeEnable;
+bool tempCF;
+#pragma endregion definitions_variables
 
+#pragma region function_declarations
 /////////////////////////
 //Function declarations//
 /////////////////////////
@@ -254,6 +267,8 @@ void displayBlank(int oledDisp);
 void menu();
 void menuOpts(int menuOpt);
 void sysSettings();
+void tempSettings();
+void setTempComp();
 
 /*Clock page display and clock setting functions*/
 void displayClock(int oledDisp);
@@ -310,7 +325,9 @@ void resetTimer(int option);
 
 /*Misc functions*/
 void battLevel(int battChk);
+#pragma endregion function_declarations
 
+#pragma region setup
 ////////////////////////////
 //Initialization and setup//
 ////////////////////////////
@@ -327,7 +344,8 @@ void setup() {
   delay(500);
   digitalWrite(rstPinOLED, HIGH);
   Wire.begin();
-  Wire.setClock(100000);
+  // Wire.setClock(100000);
+	Wire.setClock(400000);
 	delay(1000);
 	EEPROM.begin(1000);
   sht.begin();
@@ -348,8 +366,11 @@ void setup() {
 	infoChimeEnable = EEPROM.readBool(0xA1);
 	buttonBeepEnable = EEPROM.readBool(0xA2);
 	nightModeEnable = EEPROM.readBool(0xA3);
+	tempCF = EEPROM.readBool(0xB0);
 }
+#pragma endregion setup
 
+#pragma region loop
 /////////////////////
 //Main program loop//
 /////////////////////
@@ -482,6 +503,7 @@ void loop() {
 		displayRadio(1);
 	}
 
+#pragma region serial_diag
 	/*Diagnostic output to TTY*/
 	// Serial.write(27);
 	// Serial.print("[2J"); // clear screen
@@ -499,7 +521,10 @@ void loop() {
 	Serial.print("   Battery Level (Calculated)-");
 	Serial.print(battLvl);
 	Serial.println();
+	#pragma endregion serial_diag
 }
+#pragma endregion loop
+
 
 /////////////////////////////////////////////////
 //Displays selected priority page on subdisplay//

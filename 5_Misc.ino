@@ -298,10 +298,12 @@ void resetTimer(int option) {
 //Misc functions//
 //////////////////
 void battLevel(int battChk) {
-  if (battChk != 0 && battChk > 1010) battLvl = 5;
-  else if (battChk != 0 && battChk < 1010) battLvl = 4;
-  else if (battChk != 0 && battChk < 960) battLvl = 3;
-  else if (battChk != 0 && battChk < 860) battLvl = 2;
-  else if (battChk != 0 && battChk < 820) battLvl = 1;
-  else if (battChk == 0) battLvl = 0;
+  if (battChk == 0) battLvl = 0;
+  if (battChk != 0) {
+    if (battChk > 1010) battLvl = 5;
+    if (battChk < 1010) battLvl = 4;
+    if (battChk < 960) battLvl = 3;
+    if (battChk < 860) battLvl = 2;
+    if (battChk < 820) battLvl = 1;
+  } 
 }
