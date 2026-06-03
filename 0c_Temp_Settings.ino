@@ -60,20 +60,27 @@ void tempSettings() {
 ////////////////////////////////
 //Set Temperature Compensation//
 ////////////////////////////////
-void setTempComp() {
+void setTempComp(bool returned) {
   setBit = true;
+  bool tempPlusMinus;
+  if (tempComp != 0 && returned == false ) {
+    if (tempComp > 0) tempPlusMinus = true;
+    if (tempComp < 0) tempPlusMinus = false;
+  }
   oled1.clearDisplay();
   oled1.setTextSize(2);
   oled1.setCursor(0, 0);
   oled1.print("Enter Comp Value");
   oled1.setTextSize(1);
   oled1.setCursor(0,16);
-  oled1.print("* for decimal");
+  oled1.print("* for decimal, A - +/-");
   oled1.drawLine(0, 25, 127, 25, SSD1306_WHITE);
   oled1.drawLine(0, 26, 127, 26, SSD1306_WHITE);
   oled1.setTextSize(1);
   oled1.setTextSize(3);
   oled1.setCursor(0, 40);
+  if (tempPlusMinus == true) oled1.print("+");
+  if (tempPlusMinus == false) oled1.print("-");
   oled1.display();
   while (setBit == true) {
     runMasterClock();
@@ -99,6 +106,13 @@ void setTempComp() {
         oled1.display();
         if (buttonBeepEnable == true) singleBeep(20);
       }
+      if (key == 'A') {
+        tempPlusMinus = !tempPlusMinus;
+        returned = true;
+        if (buttonBeepEnable == true) singleBeep(20);
+        return setTempComp();
+      }
+
       if (key == '#') {
         if (bufferIndex == 0) {
           setBit = false;

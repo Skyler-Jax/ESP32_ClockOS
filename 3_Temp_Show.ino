@@ -14,7 +14,10 @@ void displayTemp(int oledDisp) {
         /*Request and read current environmental data from sensor*/
         sht.requestData();
         sht.readData(true);
-        tempF = (sht.getTemperature() * 1.8) + 31.4;    //Convert Celsius value from sensor to Farenheit
+        float humid = sht.getHumidity();    //Read humidity from sensor
+        float temp = sht.getTemperature();  //Read temperature from sensor
+        if (tempCF == false) temp = (temp * 1.8) + 31.4;  //Read temperature from sensor, convert value to Farenheit
+        temp = temp + tempComp;
 
         /*Draw temp on page display*/
         if (nightModeActive == false) {   //Only draw when Night Mode blanking inactive
@@ -25,12 +28,12 @@ void displayTemp(int oledDisp) {
           oled1.drawBitmap(4, 42, bmp_humidity, 16, 16, WHITE);
           oled1.setTextSize(3);
           oled1.setCursor(27,4);
-          oled1.print(tempF, 1);
+          oled1.print(temp, 1);
           oled1.setTextSize(2);
           oled1.print(" F");
           oled1.setCursor(27, 38);
           oled1.setTextSize(3);
-          oled1.print(sht.getHumidity(), 1);
+          oled1.print(humid, 1);
           oled1.setTextSize(2);
           oled1.print(" %");
           oled1.display();    //Draw frame on display
@@ -81,8 +84,11 @@ void displayTemp(int oledDisp) {
 
         /*Request and read current environmental data from sensor*/
         sht.requestData();
-        sht.readData(false);
-        tempF = (sht.getTemperature() * 1.8) + 31.4;    //Convert Celsius value from sensor to Farenheit
+        sht.readData(true);
+        float humid = sht.getHumidity();    //Read humidity from sensor
+        float temp = sht.getTemperature();  //Read temperature from sensor
+        if (tempCF == false) temp = (temp * 1.8) + 31.4;  //Convert value to Farenheit if Celsius disabled
+        temp = temp + tempComp;
 
         /*Draw temp on page display*/
         if (nightModeActive == false) {   //Only draw when Night Mode blanking inactive
@@ -93,12 +99,12 @@ void displayTemp(int oledDisp) {
           oled2.drawBitmap(4, 42, bmp_humidity, 16, 16, WHITE);
           oled2.setTextSize(3);
           oled2.setCursor(27,4);
-          oled2.print(tempF, 1);
+          oled2.print(temp, 1);
           oled2.setTextSize(2);
           oled2.print(" F");
           oled2.setCursor(27, 38);
           oled2.setTextSize(3);
-          oled2.print(sht.getHumidity(), 1);
+          oled2.print(humid, 1);
           oled2.setTextSize(2);
           oled2.print(" %");
           oled2.display();    //Draw frame on display

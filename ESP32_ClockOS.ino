@@ -216,7 +216,6 @@ const unsigned long timeInterval = 500;
 const unsigned long timerInterval = 1000;
 const unsigned long tempInterval = 15000;
 const unsigned long radioInterval = 2000;
-float tempF;
 float tempComp;
 float frequency;
 bool h12;
