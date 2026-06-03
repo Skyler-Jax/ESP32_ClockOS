@@ -62,11 +62,7 @@ void tempSettings() {
 ////////////////////////////////
 void setTempComp(bool returned) {
   setBit = true;
-  bool tempPlusMinus;
-  if (tempComp != 0 && returned == false ) {
-    if (tempComp > 0) tempPlusMinus = true;
-    if (tempComp < 0) tempPlusMinus = false;
-  }
+  bool tempPlusMinus = (tempComp >= 0);
   oled1.clearDisplay();
   oled1.setTextSize(2);
   oled1.setCursor(0, 0);
@@ -99,7 +95,7 @@ void setTempComp(bool returned) {
         if (buttonBeepEnable == true) singleBeep(20);
       }
       if (key == '*') {
-        char key = '.';
+        key = '.';
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
         oled1.print(key);
@@ -108,31 +104,42 @@ void setTempComp(bool returned) {
       }
       if (key == 'A') {
         tempPlusMinus = !tempPlusMinus;
-        returned = true;
+        oled1.fillRect(0, 40, 128, 24, SSD1306_BLACK);
+        oled1.setCursor(0, 40);
+        oled1.print(tempPlusMinus ? "+" : "-");
+        for (int i = 0; i < bufferIndex; i++) oled1.print(inputBuffer[i]);
+        oled1.display();
         if (buttonBeepEnable == true) singleBeep(20);
-        return setTempComp();
       }
 
       if (key == '#') {
         if (bufferIndex == 0) {
           setBit = false;
           if (infoChimeEnable == true) errorChime();
-        } else if (atof(inputBuffer) < -10 || atof(inputBuffer) > 10) {
-          if (infoChimeEnable == true) errorChime();
-          inputBuffer[bufferIndex] = '\0';
-          bufferIndex = 0;
-          memset(inputBuffer, 0, sizeof(inputBuffer));
-          setTempComp();
         } else {
           inputBuffer[bufferIndex] = '\0';
-          tempComp = atof(inputBuffer);
-          EEPROM.writeFloat(0xB1, atof(inputBuffer));
-          EEPROM.commit();
-          bufferIndex = 0;
-          memset(inputBuffer, 0, sizeof(inputBuffer));
-          setBit = false;
-          previousTempRefresh = 0;
-          if (infoChimeEnable == true) successChime();
+          float enteredValue = atof(inputBuffer);
+          if (tempPlusMinus == false) {
+            enteredValue = enteredValue * -1.0;
+          }
+          if (enteredValue < -10 || enteredValue > 10) {
+            if (infoChimeEnable == true) errorChime();
+            bufferIndex = 0;
+            memset(inputBuffer, 0, sizeof(inputBuffer));
+            oled1.fillRect(0, 40, 128, 24, SSD1306_BLACK);
+            oled1.setCursor(0, 40);
+            oled1.print(tempPlusMinus ? "+" : "-");
+            oled1.display();
+          } else {
+            tempComp = enteredValue;
+            EEPROM.writeFloat(0xB1, tempComp);
+            EEPROM.commit();
+            bufferIndex = 0;
+            memset(inputBuffer, 0, sizeof(inputBuffer));
+            setBit = false;
+            previousTempRefresh = 0;
+            if (infoChimeEnable == true) successChime();
+          }
         }
       }
     }
