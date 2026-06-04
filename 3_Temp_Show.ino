@@ -30,7 +30,8 @@ void displayTemp(int oledDisp) {
           oled1.setCursor(27,4);
           oled1.print(temp, 1);
           oled1.setTextSize(2);
-          oled1.print(" F");
+          if (tempCF == true) oled1.print(" C");
+          if (tempCF == false) oled1.print(" F");
           oled1.setCursor(27, 38);
           oled1.setTextSize(3);
           oled1.print(humid, 1);
@@ -101,7 +102,8 @@ void displayTemp(int oledDisp) {
           oled2.setCursor(27,4);
           oled2.print(temp, 1);
           oled2.setTextSize(2);
-          oled2.print(" F");
+          if (tempCF == true) oled2.print(" C");
+          if (tempCF == false) oled2.print(" F");
           oled2.setCursor(27, 38);
           oled2.setTextSize(3);
           oled2.print(humid, 1);

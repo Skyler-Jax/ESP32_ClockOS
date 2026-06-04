@@ -13,14 +13,12 @@ void tempSettings() {
     oled1.drawLine(0, 26, 127, 26, SSD1306_WHITE);
     oled1.setTextSize(1);
     oled1.setCursor(0, 32);
-    oled1.print("A - °C/°F      ");
-    if (tempCF == true) oled1.println("°C");
-    else oled1.println("°F");
-    oled1.print("B - Temp Comp  ");
-    if (tempComp != 0) {
-      oled1.print("°");
-      oled1.println(tempComp);
-    }
+    oled1.print("A - Degrees (C/F) ");
+    if (tempCF == true) oled1.println("C");
+    else oled1.println("F");
+    oled1.print("B - Temp Comp ");
+    oled1.print(tempComp,1);
+    oled1.println(" C");
     oled1.display();    //Draw frame on display
   }
 
@@ -50,7 +48,7 @@ void tempSettings() {
 
     /*Return to Main Menu*/
     if (key == '#') {
-      sysSettingsShow = false;
+      tempSettingsShow = false;
       menuShow = true;
       if (buttonBeepEnable == true) singleBeep(20);
     }
@@ -60,16 +58,16 @@ void tempSettings() {
 ////////////////////////////////
 //Set Temperature Compensation//
 ////////////////////////////////
-void setTempComp(bool returned) {
+void setTempComp() {
   setBit = true;
   bool tempPlusMinus = (tempComp >= 0);
   oled1.clearDisplay();
   oled1.setTextSize(2);
   oled1.setCursor(0, 0);
-  oled1.print("Enter Comp Value");
+  oled1.print("Comp Value");
   oled1.setTextSize(1);
   oled1.setCursor(0,16);
-  oled1.print("* for decimal, A - +/-");
+  oled1.print("* for decimal, A +/-");
   oled1.drawLine(0, 25, 127, 25, SSD1306_WHITE);
   oled1.drawLine(0, 26, 127, 26, SSD1306_WHITE);
   oled1.setTextSize(1);
@@ -82,8 +80,7 @@ void setTempComp(bool returned) {
     runMasterClock();
     runTime();
     runTimer();
-    if (timerRun == false) displayClock(2);
-    else displayTimer(2);
+    displayTemp(2);
     char key = keypad.getKey();
     if (key != NO_KEY) {
       delay(50);

@@ -343,7 +343,6 @@ void setup() {
   delay(500);
   digitalWrite(rstPinOLED, HIGH);
   Wire.begin();
-  // Wire.setClock(100000);
 	Wire.setClock(400000);
 	delay(1000);
 	EEPROM.begin(1000);
@@ -366,6 +365,7 @@ void setup() {
 	buttonBeepEnable = EEPROM.readBool(0xA2);
 	nightModeEnable = EEPROM.readBool(0xA3);
 	tempCF = EEPROM.readBool(0xB0);
+	tempComp = EEPROM.readFloat(0XB1);
 }
 #pragma endregion setup
 
@@ -446,6 +446,12 @@ void loop() {
      	displayRadio(2);
    	}
 		sysSettings();
+	}
+
+	/*Call settings display page on main screen and update page on subscreen*/
+	if (tempSettingsShow == true) {
+		tempSettings();
+		displayTemp(2);
 	}
 
 	/*Call clock display page on main screen and update page on subscreen*/
