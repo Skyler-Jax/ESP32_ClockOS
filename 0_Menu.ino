@@ -13,9 +13,9 @@ void menu() {
     oled1.drawLine(0, 26, 127, 26, SSD1306_WHITE);
     oled1.setTextSize(1);
     oled1.setCursor(0, 36);
-    oled1.print("A - Clock   B - Timer");
+    oled1.print("1 - Clock   2 - Timer");
     oled1.setCursor(0, 50);
-    oled1.print("C - Temp    D - Radio");
+    oled1.print("3 - Temp    4 - Radio");
     oled2.clearDisplay();
     oled2.setTextSize(3);
     oled2.setCursor(0, 0);
@@ -24,9 +24,9 @@ void menu() {
     oled2.drawLine(0, 26, 127, 26, SSD1306_WHITE);
     oled2.setTextSize(1);
     oled2.setCursor(0, 36);
-    oled2.print("1 - Systm   2 - Clock");
+    oled2.print("A - Systm   B - Clock");
     oled2.setCursor(0, 50);
-    oled2.print("3 - Temp    4 - Radio");
+    oled2.print("C - Temp    D - Radio");
     dcInputIcon(onDC, 1, 101, 4);
     oled1.display();    //Draw frame on display 1
     oled2.display();    //Draw frame on display 2
@@ -43,14 +43,14 @@ void menu() {
     else nightModeActivity();
 
     /*Enter system settings menu*/
-    if (key == '1') {
+    if (key == 'A') {
       menuShow = false;
       sysSettingsShow = true;
       if (buttonBeepEnable == true) singleBeep(20);
     }
 
     /*Enter temp settings menu*/
-        if (key == '3') {
+        if (key == 'C') {
       menuShow = false;
       tempSettingsShow = true;
       if (buttonBeepEnable == true) singleBeep(20);
@@ -58,10 +58,10 @@ void menu() {
 
 
     /*Send selected option to flag setter*/
-    if (key == 'A') menuOpts(1);
-    if (key == 'B') menuOpts(2);
-    if (key == 'C') menuOpts(3);
-    if (key == 'D') menuOpts(4);
+    if (key == '1') menuOpts(1);
+    if (key == '2') menuOpts(2);
+    if (key == '3') menuOpts(3);
+    if (key == '4') menuOpts(4);
 
     /*Reset pages marked for subdisplay priority*/
     if (key == '*') {
