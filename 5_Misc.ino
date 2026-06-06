@@ -307,3 +307,8 @@ void battLevel(int battChk) {
     if (battChk < 820) battLvl = 1;
   } 
 }
+
+char getKeyChar() {
+  char key = keyPad.getChar();
+  return key;
+}

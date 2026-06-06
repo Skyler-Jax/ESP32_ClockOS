@@ -22,9 +22,9 @@ void setRadio() {
     runTimer();
     if (timerRun == false) displayClock(2);
     else displayTimer(2);
-    char key = keypad.getKey();
-    if (key != NO_KEY) {
-      delay(50);
+    if (keyPad.isPressed()) {
+      delay(50);    //Debounce timer
+      char key = getKeyChar();
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;

@@ -11,10 +11,11 @@ Ancillary circuits required:
 Additional components required:
 1. 1.5" 128x64 SSD1309 OLED display
 2. .9" 128x64 SSD1306 OLED display
-3. generic 4x4 matrix keypad
-4. active buzzer for alarm and button beeps
-5. passive buzzer for simple chimes
-6. LDR for display dimming and Night Mode activation
+3. digital I/O-to-I2C keypad converter
+4. generic 4x4 matrix keypad
+5. active buzzer for alarm and button beeps
+6. passive buzzer for simple chimes
+7. LDR for display dimming and Night Mode activation
 
 While my end-game goal is to write all of my own libraries for the finished product, this project currently utilizes the following additional libraries:
 1. https://github.com/NorthernWidget/DS3231
@@ -22,4 +23,4 @@ While my end-game goal is to write all of my own libraries for the finished prod
 3. https://github.com/simonmonk/arduino_TEA5767
 4. https://github.com/adafruit/Adafruit_SSD1306
 5. https://github.com/adafruit/Adafruit-GFX-Library
-6. https://github.com/Chris--A/Keypad
+6. https://github.com/RobTillaart/I2CKeyPad

@@ -23,9 +23,9 @@ void tempSettings() {
   }
 
   /*Read keypad key press and process selection*/
-  char key = keypad.getKey();
-  if (key != NO_KEY) {
+  if (keyPad.isPressed()) {
     delay(50);    //Debounce delay
+    char key = getKeyChar();
     if (nightModeEnable == true && nightModeActive == true) { //Wake from night mode
       nightModeActivity();
       return loop();
@@ -81,9 +81,9 @@ void setTempComp() {
     runTime();
     runTimer();
     displayTemp(2);
-    char key = keypad.getKey();
-    if (key != NO_KEY) {
+    if (keyPad.isPressed()) {
       delay(50);
+      char key = getKeyChar();
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;

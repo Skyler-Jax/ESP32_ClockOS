@@ -9,7 +9,8 @@
 #include <TEA5767.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include <Keypad.h>
+// #include <Keypad.h>
+#include <I2CKeyPad.h>
 #include <WiFi.h>
 #include <I2CKeyPad.h>
 #pragma endregion includes
@@ -29,17 +30,8 @@ DS3231 RTC;
 /////////////////////////////////
 //Keypad and input buffer setup//
 /////////////////////////////////
-const byte ROWS = 4;
-const byte COLS = 4;
-char keys[ROWS][COLS] = {
-  {'1','2','3','A'},
-  {'4','5','6','B'},
-  {'7','8','9','C'},
-  {'*','0','#','D'}
-};
-byte rowPins[ROWS] = {4,13,14,27};
-byte colPins[COLS] = {26,25,33,32};
-Keypad keypad = Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS);
+I2CKeyPad keyPad(0x20);
+char keymap[19] = "D#0*C987B654A321NF";  //  N = NoKey, F = Fail
 char inputBuffer[20];
 int bufferIndex = 0;
 
@@ -324,6 +316,7 @@ void resetTimer(int option);
 
 /*Misc functions*/
 void battLevel(int battChk);
+char getKeyChar();
 #pragma endregion function_declarations
 
 #pragma region setup
@@ -342,9 +335,10 @@ void setup() {
   digitalWrite(rstPinOLED, LOW);
   delay(500);
   digitalWrite(rstPinOLED, HIGH);
-  Wire.begin();
+  Wire.begin(21,22);
 	Wire.setClock(400000);
 	delay(1000);
+	keyPad.loadKeyMap(keymap);
 	EEPROM.begin(1000);
   sht.begin();
   radio.setStandby(stby);

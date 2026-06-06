@@ -70,9 +70,9 @@ void getDoW() {
     runTimer();
     if (timerRun == false) displayClock(2);
     else displayTimer(2);
-    char key = keypad.getKey();
-    if (key != NO_KEY) {
+    if (keyPad.isPressed()) {
       delay(50);
+      char key = getKeyChar();
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
@@ -141,9 +141,9 @@ void getHour() {
     runTimer();
     if (timerRun == false) displayClock(2);
     else displayTimer(2);
-    char key = keypad.getKey();
-    if (key != NO_KEY) {
-      delay(50);
+    if (keyPad.isPressed()) {
+      delay(50);    //Debounce timer
+      char key = getKeyChar();
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
@@ -206,9 +206,9 @@ void getMin() {
     runTimer();
     if (timerRun == false) displayClock(2);
     else displayTimer(2);
-    char key = keypad.getKey();
-    if (key != NO_KEY) {
-      delay(50);
+    if (keyPad.isPressed()) {
+      delay(50);    //Debounce timer
+      char key = getKeyChar();
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
@@ -271,9 +271,9 @@ void getAMPM() {
     runTimer();
     if (timerRun == false) displayClock(2);
     else displayTimer(2);
-    char key = keypad.getKey();
-    if (key != NO_KEY) {
-      delay(50);
+    if (keyPad.isPressed()) {
+      delay(50);    //Debounce timer
+      char key = getKeyChar();
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
@@ -338,9 +338,9 @@ void getYear() {
     runTimer();
     if (timerRun == false) displayClock(2);
     else displayTimer(2);
-    char key = keypad.getKey();
-    if (key != NO_KEY) {
-      delay(50);
+    if (keyPad.isPressed()) {
+      delay(50);    //Debounce timer
+      char key = getKeyChar();
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
@@ -403,9 +403,9 @@ void getMonth() {
     runTimer();
     if (timerRun == false) displayClock(2);
     else displayTimer(2);
-    char key = keypad.getKey();
-    if (key != NO_KEY) {
-      delay(50);
+    if (keyPad.isPressed()) {
+      delay(50);    //Debounce timer
+      char key = getKeyChar();
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
@@ -468,9 +468,9 @@ void getDay() {
     runTimer();
     if (timerRun == false) displayClock(2);
     else displayTimer(2);
-    char key = keypad.getKey();
-    if (key != NO_KEY) {
-      delay(50);
+    if (keyPad.isPressed()) {
+      delay(50);    //Debounce timer
+      char key = getKeyChar();
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
@@ -710,9 +710,9 @@ bool confirmSave() {
     runTime();
     runTimer();
     displayClock(2);
-    char key = keypad.getKey();
-    if (key != NO_KEY) {
-      delay(50);
+    if (keyPad.isPressed()) {
+      delay(50);    //Debounce timer
+      char key = getKeyChar();
       if (key == '#') {
         setBit = false;
         if (infoChimeEnable == true) successChime();
