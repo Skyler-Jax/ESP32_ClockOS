@@ -15,7 +15,7 @@ void menu() {
     oled1.setCursor(0, 36);
     oled1.print("1 - Clock   2 - Timer");
     oled1.setCursor(0, 50);
-    oled1.print("3 - Temp    4 - Radio");
+    oled1.print("3 - Temp    4 - Audio");
     oled2.clearDisplay();
     oled2.setTextSize(3);
     oled2.setCursor(0, 0);
@@ -26,7 +26,7 @@ void menu() {
     oled2.setCursor(0, 36);
     oled2.print("A - Systm   B - Clock");
     oled2.setCursor(0, 50);
-    oled2.print("C - Temp    D - Radio");
+    oled2.print("C - Temp    D - Audio");
     dcInputIcon(onDC, 1, 101, 4);
     oled1.display();    //Draw frame on display 1
     oled2.display();    //Draw frame on display 2
@@ -34,8 +34,8 @@ void menu() {
 
   /*Read keypad key press and process selection*/
   if (keyPad.isPressed()) {
-    delay(50);    //Debounce delay
     char key = getKeyChar();
+    delay(150);    //Debounce delay
     if (nightModeEnable == true && nightModeActive == true) { //Wake from night mode
       nightModeActivity();
       return loop();
@@ -85,7 +85,7 @@ void menu() {
       if (buttonBeepEnable == true) singleBeep(50);
     } else if (key == '#' && lastPage == 4) {
       menuShow = !menuShow;
-      radioShow = true;
+      audioShow = true;
       if (buttonBeepEnable == true) singleBeep(50);
     
     }
@@ -122,7 +122,7 @@ void menuOpts(int menuOpt) {
   }
   if (menuOpt == 4) {
     resetCounters();
-    radioShow = true;
+    audioShow = true;
     menuShow = false;
     lastPage = 4;
     if (oled2Page == 4 && oled2Priority == true) displayBlank(2);

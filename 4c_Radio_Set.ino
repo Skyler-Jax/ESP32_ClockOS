@@ -23,8 +23,8 @@ void setRadio() {
     if (timerRun == false) displayClock(2);
     else displayTimer(2);
     if (keyPad.isPressed()) {
-      delay(50);    //Debounce timer
       char key = getKeyChar();
+      delay(150);    //Debounce delay
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;

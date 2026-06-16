@@ -125,6 +125,18 @@ void drawTimerBMP(int timerBMP, int oledDisp, int posX, int posY) {
   }
 }
 
+/*Audio mode icon*/
+void audioModeIcon(int oledDisp, int posX, int posY) {
+  if (oledDisp == 1) {
+    if (audioMode == true) oled1.drawBitmap(posX, posY, bmp_Radio, 25, 19, WHITE);
+    if (audioMode == false) oled1.drawBitmap(posX, posY, bmp_BT, 14, 19, WHITE);
+  }
+  if (oledDisp == 2) {
+    if (audioMode == true) oled2.drawBitmap(posX, posY, bmp_Radio, 25, 19, WHITE);
+    if (audioMode == false) oled2.drawBitmap(posX, posY, bmp_BT, 14, 19, WHITE);
+  }
+}
+
 /*Radio signal strength bars*/
 void signalLevel(int oledDisp, int posX, int posY) {
   short level = radio.getSignalLevel();
@@ -297,6 +309,27 @@ void resetTimer(int option) {
 //////////////////
 //Misc functions//
 //////////////////
+/*Bluetooth Metadata*/
+void getMetadata(int oledDisp) {
+  if (oledDisp == 1) {
+    a2dp_sink.set_avrc_metadata_attribute_mask(ESP_AVRC_MD_ATTR_TITLE | ESP_AVRC_MD_ATTR_ARTIST | ESP_AVRC_MD_ATTR_ALBUM);
+	  a2dp_sink.set_avrc_metadata_callback(avrc_metadata_oled1);
+  }
+  if (oledDisp == 2) {
+    a2dp_sink.set_avrc_metadata_attribute_mask(ESP_AVRC_MD_ATTR_TITLE | ESP_AVRC_MD_ATTR_ARTIST | ESP_AVRC_MD_ATTR_ALBUM);
+	  a2dp_sink.set_avrc_metadata_callback(avrc_metadata_oled2);
+  }
+}
+void avrc_metadata_oled1(uint8_t id, const uint8_t *text) {
+  oled1.printf("%s\n", text);
+  Serial.printf("%s\n", text);  
+}
+void avrc_metadata_oled2(uint8_t id, const uint8_t *text) {
+  oled2.printf("%s\n", text);
+  Serial.printf("%s\n", text);  
+}
+
+/*Determine battery level*/
 void battLevel(int battChk) {
   if (battChk == 0) battLvl = 0;
   if (battChk != 0) {
@@ -308,7 +341,20 @@ void battLevel(int battChk) {
   } 
 }
 
+/*Read keypad*/
 char getKeyChar() {
   char key = keyPad.getChar();
   return key;
+}
+
+/*Display Blanking*/
+void displayBlank(int oledDisp) {
+  if (oledDisp == 1) {
+    oled1.clearDisplay();
+    oled1.display();
+  }
+  if (oledDisp == 2) {
+    oled2.clearDisplay();
+    oled2.display();
+  }
 }

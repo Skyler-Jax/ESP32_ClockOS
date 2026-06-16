@@ -9,9 +9,9 @@
 #include <TEA5767.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-// #include <Keypad.h>
-#include <I2CKeyPad.h>
-#include <WiFi.h>
+#include <BluetoothA2DPSink.h>
+#include <AudioTools.h>
+#include <ESP_I2S.h>
 #include <I2CKeyPad.h>
 #pragma endregion includes
 
@@ -26,6 +26,15 @@ SHT31 sht;
 //DS3231 setup//
 ////////////////
 DS3231 RTC;
+
+//////////////////////////////
+//Bluetooth audio sink setup//
+//////////////////////////////
+const uint8_t I2S_SCK = 26;
+const uint8_t I2S_WS = 27;
+const uint8_t I2S_SDOUT = 14;
+I2SClass i2s;
+BluetoothA2DPSink a2dp_sink(i2s);
 
 /////////////////////////////////
 //Keypad and input buffer setup//
@@ -92,6 +101,18 @@ const unsigned char bmp_mono [] PROGMEM = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x30, 0x00, 0x00, 0x38, 0x00, 0x92, 0x3c, 0x00, 0x49,
 	0x3e, 0x00, 0x24, 0xbf, 0xc0, 0x24, 0xbf, 0xc0, 0x24, 0xbf, 0xc0, 0x24, 0xbf, 0xc0, 0x49, 0x3e,
 	0x00, 0x92, 0x3c, 0x00, 0x00, 0x38, 0x00, 0x00, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+};
+const unsigned char bmp_Radio [] PROGMEM = {
+	0x00, 0x00, 0x0f, 0x80, 0x00, 0x00, 0xf8, 0x00, 0x00, 0x0f, 0x80, 0x00, 0x00, 0xf8, 0x00, 0x00, 
+	0x0f, 0x80, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x3f, 0xff, 0xfe, 0x00, 0x40, 0x00, 0x01, 0x00, 
+	0x8f, 0x80, 0x00, 0x80, 0x90, 0x40, 0x00, 0x80, 0xaa, 0xa3, 0xf8, 0x80, 0xa0, 0x20, 0x00, 0x80, 
+	0xa8, 0x23, 0xf8, 0x80, 0xac, 0x20, 0x00, 0x80, 0xa6, 0x23, 0xf8, 0x80, 0x92, 0x40, 0x00, 0x80, 
+	0x8f, 0x80, 0x00, 0x80, 0x40, 0x00, 0x01, 0x00, 0x3f, 0xff, 0xfe, 0x00
+};
+const unsigned char bmp_BT [] PROGMEM = {
+	0x3f, 0xf0, 0x60, 0x18, 0xc2, 0x0c, 0x83, 0x04, 0x82, 0x84, 0x82, 0x44, 0x92, 0x24, 0x8a, 0x44, 
+	0x86, 0x84, 0x83, 0x04, 0x86, 0x84, 0x8a, 0x44, 0x92, 0x24, 0x82, 0x44, 0x82, 0x84, 0x83, 0x04, 
+	0xc2, 0x0c, 0x60, 0x18, 0x3f, 0xf0
 };
 const unsigned char bmp_timer1 [] PROGMEM = {
 	0x00, 0x00, 0x7f, 0xf8, 0x7f, 0xf8, 0x20, 0x10, 0x20, 0x10, 0x38, 0xf0, 0x3f, 0xf0, 0x1f, 0xe0,
@@ -214,9 +235,11 @@ bool h12;
 bool AMPM;
 bool centuryBit;
 bool muted = false;
-bool stby = true;
+bool stbyRadio = true;
+bool stbyBT = true;
+bool startBT = false;
 bool snc = false;
-bool sncDisable = 0;
+bool sncDisable = false;
 bool onDC;
 
 /////////////////////////////////////////////////////////////
@@ -233,7 +256,8 @@ bool clockShow = true;
 bool timerShow = false;
 bool timerRun = false;
 bool tempShow = false;
-bool radioShow = false;
+bool audioShow = false;
+bool audioMode = true; //true = radio, false = BT
 bool nightModeActive = false;
 
 //////////////////
@@ -284,8 +308,10 @@ void getTimerSec();
 /*Temp/humidity page display functions*/
 void displayTemp(int oledDisp);
 
-/*Radio page display and radio setting functions*/
-void displayRadio(int oledDisp);
+/*Audio page display and radio setting functions*/
+void displayAudio(int oledDisp);
+void modeRadio(int oledDisp);
+void modeBT(int oledDisp);
 void setRadio();
 void setStandby(bool stby);
 void setStereoNC(bool snc);
@@ -302,6 +328,7 @@ void errorChime();
 /*Graphical element generation*/
 void dcInputIcon(bool onDC, int oledDisp, int posX, int posY);
 void drawTimerBMP(int timerBMP, int oledDisp, int posX, int posY);
+void audioModeIcon(int oledDisp, int posX, int posY);
 void signalLevel(int oledDisp, int posX, int posY);
 void stereoIcon(bool stereo, int oledDisp, int posX, int posY);
 
@@ -315,7 +342,11 @@ void runTimer();
 void resetTimer(int option);
 
 /*Misc functions*/
+void getMetadata(int oledDisp, int dataType);
+void avrc_metadata_oled1(uint8_t id, const uint8_t *text);
+void avrc_metadata_oled2(uint8_t id, const uint8_t *text);
 void battLevel(int battChk);
+void rssi(esp_bt_gap_cb_param_t::read_rssi_delta_param &rssiParam);
 char getKeyChar();
 #pragma endregion function_declarations
 
@@ -337,12 +368,15 @@ void setup() {
   digitalWrite(rstPinOLED, HIGH);
   Wire.begin(21,22);
 	Wire.setClock(400000);
+	i2s.setPins(I2S_SCK, I2S_WS, I2S_SDOUT);
+	i2s.begin(I2S_MODE_STD, 44100, I2S_DATA_BIT_WIDTH_16BIT, I2S_SLOT_MODE_STEREO, I2S_STD_SLOT_BOTH);
 	delay(1000);
 	keyPad.loadKeyMap(keymap);
 	EEPROM.begin(1000);
   sht.begin();
-  radio.setStandby(stby);
+  radio.setStandby(stbyRadio);
   radio.setMuted(muted);
+	a2dp_sink.stop();
 	oled1.begin(SSD1306_SWITCHCAPVCC, SCREEN1_ADDRESS);
   oled1.clearDisplay();
   oled1.setTextColor(SSD1306_WHITE);
@@ -368,7 +402,6 @@ void setup() {
 //Main program loop//
 /////////////////////
 void loop() {
-
 	/*Timekeeping for other functions
 		Related functions in 5_Misc*/
 	runMasterClock();
@@ -408,36 +441,38 @@ void loop() {
 		oled2.display();
 	}
 
-	/*Call priority display page on subscreen
-		Requires further debugging, disabled for now*/
-	//if (oled2Priority != 0) oled2PriorityDisp();
-
 	/*Call menu display page on main screen and update page on subscreen*/
 	if (menuShow == true) {
-		if (timerRun == false && stby == true && oled2Priority == 0) {
-			oled2Page = 1;
-			// displayClock(2);
-		} else if (timerRun == true && oled2Priority == 0) {
-			oled2Page = 2;
-    // 	displayTimer(2);
-  	} else if (timerRun == false && stby == false && oled2Priority == 0) {
-			oled2Page = 4;
-    //  	displayRadio(2);
-   	}
+		// if (timerRun == false && stbyRadio == true && oled2Priority == 0) {
+		// 	oled2Page = 1;
+		// 	// displayClock(2);
+		// } else if (timerRun == false && stbyBT == true && oled2Priority == 0) {
+		// 	oled2Page = 1;
+		// 	// displayClock(2);
+		// } else if (timerRun == true && oled2Priority == 0) {
+		// 	oled2Page = 2;
+    // // 	displayTimer(2);
+  	// } else if (timerRun == false && stby == false && oled2Priority == 0) {
+		// 	oled2Page = 4;
+    // //  	displayAudio(2);
+   	// }
 		menu();
 	}
 
 	/*Call settings display page on main screen and update page on subscreen*/
 	if (sysSettingsShow == true) {
-		if (timerRun == false && stby == true && oled2Priority == 0) {
+		if (timerRun == false && stbyRadio == true && stbyBT == true) {
 			oled2Page = 1;
 			displayClock(2);
-		} else if (timerRun == true && oled2Priority == 0) {
+		} else if (timerRun == true) {
 			oled2Page = 2;
    		displayTimer(2);
-   	} else if (timerRun == false && stby == false && oled2Priority == 0) {
+   	} else if (timerRun == false && stbyRadio == false) {
 			oled2Page = 4;
-     	displayRadio(2);
+     	displayAudio(2);
+   	} else if (timerRun == false && stbyBT == false) {
+			oled2Page = 4;
+     	displayAudio(2);
    	}
 		sysSettings();
 	}
@@ -450,56 +485,65 @@ void loop() {
 
 	/*Call clock display page on main screen and update page on subscreen*/
 	if (clockShow == true) {
-		if (timerRun == false && stby == true && oled2Priority == 0) {
+		if (timerRun == false && stbyRadio == true && stbyBT == true) {
 			oled2Page = 3;
 			displayTemp(2);
-		} else if (timerRun == true && oled2Priority == 0) {
+		} else if (timerRun == true) {
 			oled2Page = 2;
     	displayTimer(2);
-  	} else if (timerRun == false && stby == false && oled2Priority == 0) {
+  	} else if (timerRun == false && stbyRadio == false) {
 			oled2Page = 4;
-   		displayRadio(2);
+   		displayAudio(2);
+   	} else if (timerRun == false && stbyBT == false) {
+			oled2Page = 4;
+   		displayAudio(2);
    	}
 		displayClock(1);
 	}
 
 	/*Call timer display page on main screen and update page on subscreen*/
 	if (timerShow == true) {
-		if (stby == true && oled2Priority == 0) {
+		if (stbyRadio == true && stbyBT == true) {
 			oled2Page = 1;
 			displayClock(2);
-		} else if (stby == false && oled2Priority == 0) {
+		} else if (stbyRadio == false) {
 			oled2Page = 4;
-    	displayRadio(2);
+    	displayAudio(2);
+  	} else if (stbyBT == false) {
+			oled2Page = 4;
+    	displayAudio(2);
   	}
 		displayTimer(1);
 	}
 
 	/*Call temp display page on main screen and update page on subscreen*/
 	if (tempShow == true) {
-		if (timerRun == false && stby == true && oled2Priority == 0) {
+		if (timerRun == false && stbyRadio == true && stbyBT == true) {
 			oled2Page = 1;
 			displayClock(2);
-		} else if (timerRun == true && oled2Priority == 0) {
+		} else if (timerRun == true) {
 			oled2Page = 2;
      	displayTimer(2);
-   	} else if (timerRun == false && stby == false && oled2Priority == 0) {
+   	} else if (timerRun == false && stbyRadio == false) {
 			oled2Page = 4;
-     	displayRadio(2);
+     	displayAudio(2);
+   	} else if (timerRun == false && stbyBT == false) {
+			oled2Page = 4;
+     	displayAudio(2);
    	}
 		displayTemp(1);
 	}
 
 	/*Call radio display page on main screen and update page on subscreen*/
-	if (radioShow == true) {
-		if (timerRun == false && oled2Priority == 0) {
+	if (audioShow == true) {
+		if (timerRun == false) {
 			oled2Page = 1;
 			displayClock(2);
-		} else if (timerRun == true && oled2Priority == 0) {
+		} else if (timerRun == true) {
 			oled2Page = 2;
    		displayTimer(2);
    	}
-		displayRadio(1);
+		displayAudio(1);
 	}
 
 #pragma region serial_diag
@@ -508,55 +552,18 @@ void loop() {
 	// Serial.print("[2J"); // clear screen
 	// Serial.write(27);
 	// Serial.print("[H"); // cursor to home
-	Serial.print("   Light Level (Analog)-");
-	Serial.print(lightLevel);
-	Serial.print("   Night Mode Timer-");
-	Serial.print(nightModeTime);
-	Serial.print("   Night Mode Active-");
-	if (nightModeActive == true) Serial.print("Yes");
-	if (nightModeActive == false) Serial.print("No ");
-	Serial.print("   Battery Level (Analog)-");
-	Serial.print(battChg);
-	Serial.print("   Battery Level (Calculated)-");
-	Serial.print(battLvl);
-	Serial.println();
+	// Serial.print("   Light Level (Analog)-");
+	// Serial.print(lightLevel);
+	// Serial.print("   Night Mode Timer-");
+	// Serial.print(nightModeTime);
+	// Serial.print("   Night Mode Active-");
+	// if (nightModeActive == true) Serial.print("Yes");
+	// if (nightModeActive == false) Serial.print("No ");
+	// Serial.print("   Battery Level (Analog)-");
+	// Serial.print(battChg);
+	// Serial.print("   Battery Level (Calculated)-");
+	// Serial.print(battLvl);
+	// Serial.println();
 	#pragma endregion serial_diag
 }
 #pragma endregion loop
-
-
-/////////////////////////////////////////////////
-//Displays selected priority page on subdisplay//
-/////////////////////////////////////////////////
-void oled2PriorityDisp() {
-	if (oled2Priority == 1) {
-		oled2Page = 1;
-		displayClock(2);
-	}
-	if (oled2Priority == 2) {
-		oled2Page = 2;
-		displayTimer(2);
-	}
-	if (oled2Priority == 3) {
-		oled2Page = 3;
-		displayTemp(2);
-	}
-	if (oled2Priority == 4) {
-		oled2Page = 4;
-		displayRadio(2);
-	}
-}
-
-////////////////////
-//Display blanking//
-////////////////////
-void displayBlank(int oledDisp) {
-  if (oledDisp == 1) {
-    oled1.clearDisplay();
-    oled1.display();
-  }
-  if (oledDisp == 2) {
-    oled2.clearDisplay();
-    oled2.display();
-  }
-}

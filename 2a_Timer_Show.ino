@@ -26,8 +26,8 @@ void displayTimer(int oledDisp, bool oledOverride) {
 
     /*Read keypad key press and process selection*/
     if (keyPad.isPressed()) {
-      delay(50);    //Debounce timer
       char key = getKeyChar();
+      delay(150);    //Debounce delay
       if (nightModeEnable == true && nightModeActive == true) { //Wake from night mode
         nightModeActivity();
         return loop();
@@ -97,8 +97,8 @@ void displayTimer(int oledDisp, bool oledOverride) {
 
     /*Read keypad key press and process selection*/
     if (keyPad.isPressed()) {
-      delay(50);    //Debounce timer
       char key = getKeyChar();
+      delay(150);    //Debounce delay
       if (nightModeEnable == true && nightModeActive == true) { //Wake from night mode
         nightModeActivity();
         return loop();
@@ -130,7 +130,7 @@ void displayTimer(int oledDisp, bool oledOverride) {
           tempShow = !tempShow;
           if (buttonBeepEnable == true) singleBeep(50);
           } else if (lastPage == 4) {
-          radioShow = !radioShow;
+          audioShow = !audioShow;
           if (buttonBeepEnable == true) singleBeep(50);
         }
         menuShow = true;

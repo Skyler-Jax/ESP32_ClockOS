@@ -28,11 +28,11 @@ void getTimerHour() {
   while (setBit == true) {
     runMasterClock();
     runTime();
-    if (stby == false) displayRadio(2);
+    if (stbyRadio == false || stbyBT == false) displayAudio(2);
     else displayClock(2);
     if (keyPad.isPressed()) {
-      delay(50);    //Debounce timer
       char key = getKeyChar();
+      delay(150);    //Debounce delay
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
@@ -89,11 +89,11 @@ void getTimerMin() {
   while (setBit == true) {
     runMasterClock();
     runTime();
-    if (stby == false) displayRadio(2);
+    if (stbyRadio == false || stbyBT == false) displayAudio(2);
     else displayClock(2);
     if (keyPad.isPressed()) {
-      delay(50);    //Debounce timer
       char key = getKeyChar();
+      delay(150);    //Debounce delay
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
@@ -150,11 +150,11 @@ void getTimerSec() {
   while (setBit == true) {
     runMasterClock();
     runTime();
-    if (stby == false) displayRadio(2);
+    if (stbyRadio == false || stbyBT == false) displayAudio(2);
     else displayClock(2);
     if (keyPad.isPressed()) {
-      delay(50);    //Debounce timer
       char key = getKeyChar();
+      delay(150);    //Debounce delay
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;

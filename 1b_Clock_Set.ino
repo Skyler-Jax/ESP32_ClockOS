@@ -71,8 +71,8 @@ void getDoW() {
     if (timerRun == false) displayClock(2);
     else displayTimer(2);
     if (keyPad.isPressed()) {
-      delay(50);
       char key = getKeyChar();
+      delay(150);    //Debounce delay
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
@@ -142,8 +142,8 @@ void getHour() {
     if (timerRun == false) displayClock(2);
     else displayTimer(2);
     if (keyPad.isPressed()) {
-      delay(50);    //Debounce timer
       char key = getKeyChar();
+      delay(150);    //Debounce delay
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
@@ -207,8 +207,8 @@ void getMin() {
     if (timerRun == false) displayClock(2);
     else displayTimer(2);
     if (keyPad.isPressed()) {
-      delay(50);    //Debounce timer
       char key = getKeyChar();
+      delay(150);    //Debounce delay
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
@@ -272,8 +272,8 @@ void getAMPM() {
     if (timerRun == false) displayClock(2);
     else displayTimer(2);
     if (keyPad.isPressed()) {
-      delay(50);    //Debounce timer
       char key = getKeyChar();
+      delay(150);    //Debounce delay
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
@@ -339,8 +339,8 @@ void getYear() {
     if (timerRun == false) displayClock(2);
     else displayTimer(2);
     if (keyPad.isPressed()) {
-      delay(50);    //Debounce timer
       char key = getKeyChar();
+      delay(150);    //Debounce delay
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
@@ -404,8 +404,8 @@ void getMonth() {
     if (timerRun == false) displayClock(2);
     else displayTimer(2);
     if (keyPad.isPressed()) {
-      delay(50);    //Debounce timer
       char key = getKeyChar();
+      delay(150);    //Debounce delay
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
@@ -469,8 +469,8 @@ void getDay() {
     if (timerRun == false) displayClock(2);
     else displayTimer(2);
     if (keyPad.isPressed()) {
-      delay(50);    //Debounce timer
       char key = getKeyChar();
+      delay(150);    //Debounce delay
       if (key >= '0' && key <= '9') {
         inputBuffer[bufferIndex] = key;
         bufferIndex++;
@@ -711,8 +711,8 @@ bool confirmSave() {
     runTimer();
     displayClock(2);
     if (keyPad.isPressed()) {
-      delay(50);    //Debounce timer
       char key = getKeyChar();
+      delay(150);    //Debounce delay
       if (key == '#') {
         setBit = false;
         if (infoChimeEnable == true) successChime();

@@ -44,8 +44,8 @@ void displayTemp(int oledDisp) {
 
     /*Read keypad key press and process selection*/
     if (keyPad.isPressed()) {
-      delay(50);    //Debounce timer
       char key = getKeyChar();
+      delay(150);    //Debounce delay
       if (nightModeEnable == true && nightModeActive == true) { //Wake from night mode
         nightModeActivity();
         return loop();
