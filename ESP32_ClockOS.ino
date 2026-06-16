@@ -342,9 +342,7 @@ void runTimer();
 void resetTimer(int option);
 
 /*Misc functions*/
-void getMetadata(int oledDisp, int dataType);
-void avrc_metadata_oled1(uint8_t id, const uint8_t *text);
-void avrc_metadata_oled2(uint8_t id, const uint8_t *text);
+void avrc_metadata_callback(uint8_t id, const uint8_t *text);
 void battLevel(int battChk);
 void rssi(esp_bt_gap_cb_param_t::read_rssi_delta_param &rssiParam);
 char getKeyChar();
@@ -376,7 +374,8 @@ void setup() {
   sht.begin();
   radio.setStandby(stbyRadio);
   radio.setMuted(muted);
-	a2dp_sink.stop();
+	a2dp_sink.set_avrc_metadata_attribute_mask(ESP_AVRC_MD_ATTR_TITLE | ESP_AVRC_MD_ATTR_ARTIST | ESP_AVRC_MD_ATTR_ALBUM);
+	a2dp_sink.set_avrc_metadata_callback(avrc_metadata_callback);
 	oled1.begin(SSD1306_SWITCHCAPVCC, SCREEN1_ADDRESS);
   oled1.clearDisplay();
   oled1.setTextColor(SSD1306_WHITE);

@@ -310,23 +310,12 @@ void resetTimer(int option) {
 //Misc functions//
 //////////////////
 /*Bluetooth Metadata*/
-void getMetadata(int oledDisp) {
-  if (oledDisp == 1) {
-    a2dp_sink.set_avrc_metadata_attribute_mask(ESP_AVRC_MD_ATTR_TITLE | ESP_AVRC_MD_ATTR_ARTIST | ESP_AVRC_MD_ATTR_ALBUM);
-	  a2dp_sink.set_avrc_metadata_callback(avrc_metadata_oled1);
+void avrc_metadata_callback(uint8_t id, const uint8_t *text) {
+  Serial.printf("==> AVRC metadata rsp: attribute id 0x%x, %s\n", id, text);
+  if (id == ESP_AVRC_MD_ATTR_PLAYING_TIME) {
+    uint32_t playtime = String((char*)text).toInt();
+    Serial.printf("==> Playing time is %d ms (%d seconds)\n", playtime, (int)round(playtime/1000.0));
   }
-  if (oledDisp == 2) {
-    a2dp_sink.set_avrc_metadata_attribute_mask(ESP_AVRC_MD_ATTR_TITLE | ESP_AVRC_MD_ATTR_ARTIST | ESP_AVRC_MD_ATTR_ALBUM);
-	  a2dp_sink.set_avrc_metadata_callback(avrc_metadata_oled2);
-  }
-}
-void avrc_metadata_oled1(uint8_t id, const uint8_t *text) {
-  oled1.printf("%s\n", text);
-  Serial.printf("%s\n", text);  
-}
-void avrc_metadata_oled2(uint8_t id, const uint8_t *text) {
-  oled2.printf("%s\n", text);
-  Serial.printf("%s\n", text);  
 }
 
 /*Determine battery level*/

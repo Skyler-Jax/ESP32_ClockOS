@@ -9,7 +9,6 @@ void modeBT(int oledDisp) {
   }
   if (stbyBT == false && startBT == false) {
     startBT = true;
-    // a2dp_sink.set_connected(startBT);
     a2dp_sink.set_auto_reconnect(startBT, 1000);
     a2dp_sink.start("ClockOS");
   }
@@ -39,8 +38,6 @@ void modeBT(int oledDisp) {
         if (stbyBT == false) {
           oled1.setCursor(17, 5);
           oled1.print(a2dp_sink.get_peer_name());
-          oled1.setCursor(0, 20);
-          getMetadata(1);
         }
         oled1.display();    //Draw frame on display
       }
@@ -88,7 +85,7 @@ void modeBT(int oledDisp) {
     }
   }
 
-  /*Code for secondary OLED 'subdisplay'*/
+  /*Code for primary OLED display*/
   if (oledDisp == 2) {
 
     /*Run clock page refresh timer*/
@@ -108,12 +105,11 @@ void modeBT(int oledDisp) {
           oled2.print("Output Muted");
         }
         audioModeIcon(oledDisp, 0, 0);
-        // oled1.setTextSize(3);
-        // oled1.setCursor(2, 40);
-        // oled1.print(frequency, 1);
-        // oled1.setTextSize(1);
-        // oled1.print(" MHz");
-        // if (stby == false && muted == false) stereoIcon(stereo, oledDisp, 58, 0);
+        oled2.setTextSize(1);
+        if (stbyBT == false) {
+          oled2.setCursor(17, 5);
+          oled2.print(a2dp_sink.get_peer_name());
+        }
         oled2.display();    //Draw frame on display
       }
     }
