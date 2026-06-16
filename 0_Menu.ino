@@ -86,8 +86,8 @@ void menu() {
     } else if (key == '#' && lastPage == 4) {
       menuShow = !menuShow;
       audioShow = true;
+      x = currentTitle.length();
       if (buttonBeepEnable == true) singleBeep(50);
-    
     }
   }
 }

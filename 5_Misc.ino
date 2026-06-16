@@ -311,10 +311,16 @@ void resetTimer(int option) {
 //////////////////
 /*Bluetooth Metadata*/
 void avrc_metadata_callback(uint8_t id, const uint8_t *text) {
-  Serial.printf("==> AVRC metadata rsp: attribute id 0x%x, %s\n", id, text);
-  if (id == ESP_AVRC_MD_ATTR_PLAYING_TIME) {
-    uint32_t playtime = String((char*)text).toInt();
-    Serial.printf("==> Playing time is %d ms (%d seconds)\n", playtime, (int)round(playtime/1000.0));
+  switch (id) {
+    case ESP_AVRC_MD_ATTR_TITLE:
+      currentTitle = String((const char*)text);
+      break;
+    case ESP_AVRC_MD_ATTR_ARTIST:
+      currentArtist = String((const char*)text);
+      break;
+    case ESP_AVRC_MD_ATTR_ALBUM:
+      currentAlbum = String((const char*)text);
+      break;
   }
 }
 
@@ -322,13 +328,13 @@ void avrc_metadata_callback(uint8_t id, const uint8_t *text) {
 void getBTPlayStatus(esp_avrc_playback_stat_t playback) {
   switch (playback) {
     case esp_avrc_playback_stat_t::ESP_AVRC_PLAYBACK_STOPPED:
-      playStatus = "Stop";
+      playStatus = "Stopped";
       break;
     case esp_avrc_playback_stat_t::ESP_AVRC_PLAYBACK_PLAYING:
-      playStatus = "Play";
+      playStatus = "Playing";
       break;
     case esp_avrc_playback_stat_t::ESP_AVRC_PLAYBACK_PAUSED:
-      playStatus = "Pause";
+      playStatus = "Paused";
       break;
   }
 }

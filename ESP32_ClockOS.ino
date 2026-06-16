@@ -60,6 +60,7 @@ TEA5767 radio = TEA5767();
 int rstPinOLED = 12;
 Adafruit_SSD1306 oled1(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 Adafruit_SSD1306 oled2(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+int x, minX;
 #pragma endregion hardware_setup
 
 #pragma region bitmap_bytecodes
@@ -243,6 +244,9 @@ bool snc = false;
 bool sncDisable = false;
 bool onDC;
 String playStatus = "Stop";
+String currentTitle = "";
+String currentArtist = "";
+String currentAlbum = "";
 
 /////////////////////////////////////////////////////////////
 //Flags used to set displayed pages or functions of program//
@@ -345,8 +349,8 @@ void resetTimer(int option);
 
 /*Misc functions*/
 void avrc_metadata_callback(uint8_t id, const uint8_t *text);
+void getBTPlayStatus(esp_avrc_playback_stat_t playback);
 void battLevel(int battChk);
-void rssi(esp_bt_gap_cb_param_t::read_rssi_delta_param &rssiParam);
 char getKeyChar();
 #pragma endregion function_declarations
 
@@ -382,11 +386,15 @@ void setup() {
 	oled1.begin(SSD1306_SWITCHCAPVCC, SCREEN1_ADDRESS);
   oled1.clearDisplay();
   oled1.setTextColor(SSD1306_WHITE);
+	oled1.setTextWrap(false);
   oled1.display();
 	oled2.begin(SSD1306_SWITCHCAPVCC, SCREEN2_ADDRESS);
   oled2.clearDisplay();
   oled2.setTextColor(SSD1306_WHITE);
+	oled2.setTextWrap(false);
   oled2.display();
+
+	x = 128;
 	prevHour = RTC.getHour(h12, AMPM);
 	sht.requestData();
 	frequency = EEPROM.readFloat(0x00), 2;
@@ -569,3 +577,4 @@ void loop() {
 	#pragma endregion serial_diag
 }
 #pragma endregion loop
+

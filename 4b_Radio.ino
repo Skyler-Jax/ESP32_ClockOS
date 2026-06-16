@@ -103,7 +103,8 @@ void modeRadio(int oledDisp) {
 
       /*Toggle audio mode*/
       if (key == 'D') {
-        audioMode = !audioMode;      
+        audioMode = !audioMode;
+        x = currentTitle.length();
         if (buttonBeepEnable == true) singleBeep(20);
       }
     }
