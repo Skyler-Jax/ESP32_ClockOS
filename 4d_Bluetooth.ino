@@ -18,7 +18,7 @@ void modeBT(int oledDisp) {
   if (oledDisp == 1) {
 
     /*Run clock page refresh timer*/
-    if (masterClock - previousRadioRefresh >= radioInterval || previousRadioRefresh == 0) {
+    if (masterClock - previousRadioRefresh >= btInterval || previousRadioRefresh == 0) {
       previousRadioRefresh = masterClock;
 
       /*Draw BT audio on page display*/
@@ -36,8 +36,13 @@ void modeBT(int oledDisp) {
         audioModeIcon(oledDisp, 0, 0);
         oled1.setTextSize(1);
         if (stbyBT == false) {
-          oled1.setCursor(17, 5);
+          oled1.setCursor(18, 5);
           oled1.print(a2dp_sink.get_peer_name());
+          oled1.setCursor(0, 23);
+          oled1.setTextSize(2);
+          oled1.print(playStatus);
+          oled1.setCursor(0, 40);
+          oled1.setTextSize(1);
         }
         oled1.display();    //Draw frame on display
       }
@@ -85,11 +90,12 @@ void modeBT(int oledDisp) {
     }
   }
 
+
   /*Code for primary OLED display*/
   if (oledDisp == 2) {
 
     /*Run clock page refresh timer*/
-    if (masterClock - previousRadioRefresh >= radioInterval || previousRadioRefresh == 0) {
+    if (masterClock - previousRadioRefresh >= btInterval || previousRadioRefresh == 0) {
       previousRadioRefresh = masterClock;
 
       /*Draw BT audio on page display*/
@@ -107,8 +113,13 @@ void modeBT(int oledDisp) {
         audioModeIcon(oledDisp, 0, 0);
         oled2.setTextSize(1);
         if (stbyBT == false) {
-          oled2.setCursor(17, 5);
+          oled2.setCursor(18, 5);
           oled2.print(a2dp_sink.get_peer_name());
+          oled2.setCursor(0, 23);
+          oled2.setTextSize(2);
+          oled2.print(playStatus);
+          oled2.setCursor(0, 40);
+          oled2.setTextSize(1);
         }
         oled2.display();    //Draw frame on display
       }

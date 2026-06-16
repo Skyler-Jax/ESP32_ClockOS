@@ -318,6 +318,21 @@ void avrc_metadata_callback(uint8_t id, const uint8_t *text) {
   }
 }
 
+/*Bluetooth playback status*/
+void getBTPlayStatus(esp_avrc_playback_stat_t playback) {
+  switch (playback) {
+    case esp_avrc_playback_stat_t::ESP_AVRC_PLAYBACK_STOPPED:
+      playStatus = "Stop";
+      break;
+    case esp_avrc_playback_stat_t::ESP_AVRC_PLAYBACK_PLAYING:
+      playStatus = "Play";
+      break;
+    case esp_avrc_playback_stat_t::ESP_AVRC_PLAYBACK_PAUSED:
+      playStatus = "Pause";
+      break;
+  }
+}
+
 /*Determine battery level*/
 void battLevel(int battChk) {
   if (battChk == 0) battLvl = 0;

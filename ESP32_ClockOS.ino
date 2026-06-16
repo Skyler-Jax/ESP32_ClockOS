@@ -229,6 +229,7 @@ const unsigned long timeInterval = 500;
 const unsigned long timerInterval = 1000;
 const unsigned long tempInterval = 15000;
 const unsigned long radioInterval = 2000;
+const unsigned long btInterval = 500;
 float tempComp;
 float frequency;
 bool h12;
@@ -241,6 +242,7 @@ bool startBT = false;
 bool snc = false;
 bool sncDisable = false;
 bool onDC;
+String playStatus = "Stop";
 
 /////////////////////////////////////////////////////////////
 //Flags used to set displayed pages or functions of program//
@@ -368,6 +370,7 @@ void setup() {
 	Wire.setClock(400000);
 	i2s.setPins(I2S_SCK, I2S_WS, I2S_SDOUT);
 	i2s.begin(I2S_MODE_STD, 44100, I2S_DATA_BIT_WIDTH_16BIT, I2S_SLOT_MODE_STEREO, I2S_STD_SLOT_BOTH);
+	a2dp_sink.set_avrc_rn_playstatus_callback(getBTPlayStatus);
 	delay(1000);
 	keyPad.loadKeyMap(keymap);
 	EEPROM.begin(1000);
